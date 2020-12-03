@@ -1,27 +1,20 @@
 <template>
-  <div class="brand-intro">
+  <div>
     <NavBar>
-      <div slot="center">育儿知识</div>
+      <div slot="center">最新</div>
     </NavBar>
     <div class="content">
-      <LogoTel></LogoTel>
      <NewsItem>
        <div slot="tab">儿童之家</div>
      </NewsItem>
-     <NewsItem>
-      <div slot="tab">儿童之家</div>
-
-     </NewsItem>
-
+     <NewsItem></NewsItem>
     </div>
   </div>
   </div>
 </template>
 <script>
-  import NavBar from 'components/common/navbar/NavBar';
-  import LogoTel from 'components/page/LogoTel.vue';
+  import NavBar from 'components/common/navbar/NavBar.vue';
   import NewsItem from 'components/page/NewsItem.vue';
-
   export default {
     data() {
       return {
@@ -30,7 +23,6 @@
     },
     components: {
       NavBar,
-      LogoTel,
       NewsItem
     }
   }
@@ -39,9 +31,8 @@
   @import '~assets/css/mixin.scss';
 
   .content {
-    padding: 0 1rem;
-
-  
     
+
+   
   }
 </style>

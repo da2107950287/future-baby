@@ -1,6 +1,5 @@
 <template>
   <div class="brand-intro">
-
     <div class="content">
       <LogoTel></LogoTel>
       <div>

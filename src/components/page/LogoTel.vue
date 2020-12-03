@@ -8,9 +8,9 @@
   @import '~assets/css/mixin.scss';
 
   .logo-tel {
-    @include wh(100%, 1.5rem);
+    @include wh(100%, 2.2rem);
     @include fj();
-    margin: .75rem 0 1rem;
+  
     align-items: center;
      background-color: $fc;
     font-size: 0.75rem;
