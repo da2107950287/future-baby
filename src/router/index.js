@@ -23,6 +23,11 @@ const Newest = () => import(/* webpackChunkName: "community" */ '../views/commun
 const Notice = () => import(/* webpackChunkName: "community" */ '../views/community/Notice.vue');
 
 const CProfile = () => import(/* webpackChunkName: "cprofile" */ '../views/cprofile/CProfile.vue');
+const PersonalInfo = () => import(/* webpackChunkName: "cprofile" */ '../views/cprofile/PersonalInfo.vue');
+const COrder = () => import(/* webpackChunkName: "cprofile" */ '../views/cprofile/COrder.vue');
+
+const COrderDetail = () => import(/* webpackChunkName: "cprofile" */ '../views/cprofile/COrderDetail.vue');
+
 
 const routes = [
   { path: '', redirect: '/home' },
@@ -47,8 +52,15 @@ const routes = [
   { path: '/newest', name: '最新', component: Newest },
 
   { path: '/notice', name: '网点活动', component: Notice },
-// c端我的
-{ path: '/cprofile', name: '网点活动', component: CProfile },
+  // c端我的
+  { path: '/cprofile', name: '我的', component: CProfile },
+  { path: '/personalInfo', name: '个人相信', component: PersonalInfo },
+  { path: '/corder', name: '我的订单', component: COrder },
+  { path: '/corderDetail', name: '订单详情', component: COrderDetail },
+
+  
+
+
 
 
 

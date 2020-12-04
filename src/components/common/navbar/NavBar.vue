@@ -1,6 +1,6 @@
 <template>
   <div id="nav-bar">
-    <div class="nav-left"><slot name="left"></slot></div>
+    <div class="nav-left"><slot name="left"><span class="iconfont icon-fanhui2 icon"></span></slot></div>
     <div class="nav-center"><slot name="center">标题</slot></div>
     <div class="nav-right"><slot name="right"></slot></div>
   </div>
@@ -19,8 +19,8 @@
 
     display: flex;
 
-    height: 2.2rem;
-    line-height: 2.2rem;
+    height: 44px;
+    line-height: 44px;
     text-align: center;
 
     /*border-bottom: 1px solid #eee;*/
@@ -28,7 +28,11 @@
   }
 
   .nav-left {
-    width: 60px;
+    width: 40px;
+    .icon{
+      color: #333333;
+
+    }
   }
 
   .nav-center {
@@ -36,6 +40,6 @@
   }
 
   .nav-right {
-    width: 60px;
+    width: 40px;
   }
 </style>

@@ -22,7 +22,7 @@
           <van-field readonly clickable name="calendar" :value="value" label="宝宝生日" placeholder="请选择宝宝生日"
             @click="showCalendar = true" />
           <van-calendar v-model="showCalendar" @confirm="onConfirm" />
-         
+
         </van-form>
         <van-button class="btn" round block color="#FC4B4C" native-type="submit">
           提交
@@ -67,14 +67,16 @@
 </script>
 <style lang="scss" scoped>
   @import '~assets/css/mixin.scss';
-.audition{
-  @include wh(100%,100%);
-}
+
+  .audition {
+    @include wh(100%, 100%);
+  }
+
   .content {
-    @include wh(100%,100%);
+    @include wh(100%, 100%);
     background: #f7f7f7;
     padding: 1rem;
-  
+
 
     .cover {
       @include wh(100%, 9.4rem);
@@ -83,18 +85,20 @@
       background-color: #000;
     }
 
-   .form-box{
-    margin-top: 1rem;
-    .form {
-      background: $fc;
-      
-box-shadow: 0rem 0.1rem 0.2rem 0rem rgba(230, 230, 230, 0.4);
-      border-radius: 0.5rem;
-      
-    }
-    .btn{
+    .form-box {
+      margin-top: 1rem;
+
+      .form {
+        background: $fc;
+
+        box-shadow: 0rem 0.1rem 0.2rem 0rem rgba(230, 230, 230, 0.4);
+        border-radius: 0.5rem;
+
+      }
+
+      .btn {
         margin-top: 2rem;
       }
-   }
+    }
   }
 </style>
