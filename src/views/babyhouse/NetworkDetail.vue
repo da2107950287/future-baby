@@ -336,7 +336,6 @@
           let obj = {
             title: "未来宝贝", // 分享标题
             link: window.location.href, // 分享链接
-
           }
           wxShare(this.config, obj, (msg) => {
             console.log(msg)

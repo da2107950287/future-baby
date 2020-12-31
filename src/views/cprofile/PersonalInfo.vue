@@ -12,7 +12,7 @@
         <van-field right-icon="arrow" readonly clickable name="calendar" :value="query.birthday" label="生日"
           placeholder="请选择您的生日" @click="showCalendar = true" :error-message="verification.birthday"
           @input="VerifyCellBirthday" required />
-        <van-calendar v-model="showCalendar" @confirm="onConfirm" />
+        <van-calendar :minDate="new Date(1970,1,1)" v-model="showCalendar" @confirm="onConfirm" />
         <van-field name="radio" label="性别" required>
           <template #input>
             <van-radio-group v-model="query.sex" direction="horizontal" :error-message="verification.sex"

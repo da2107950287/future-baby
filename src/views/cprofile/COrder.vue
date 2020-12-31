@@ -13,7 +13,7 @@
               <span>总金额：￥{{orderlistMoney}}</span>
             </div>
             <img @click="showCalendar = true" class="total-right" src="~assets/img/icon_clen.png" alt="">
-            <van-calendar v-model="showCalendar" @confirm="onConfirm" />
+            <van-calendar :minDate="new Date(1970,1,1)" v-model="showCalendar" @confirm="onConfirm" />
           </div>
           <van-pull-refresh v-model="isLoading" @refresh="onRefresh">
             <van-list v-model="loading" :finished="finished" finished-text="暂无更多数据">

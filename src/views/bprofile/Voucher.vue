@@ -11,7 +11,7 @@
 				<div class="money">选择时间<input v-model="endTime" @click="showCalendar=true" readonly placeholder=""
 						@change="VerifyCellEndTime"><span class="iconfont icon-fanhui2 icon" @click="showCalendar=true"></span></div>
 				<div class="err-msg">{{endTimeErrMsg}}</div>
-				<van-calendar v-model="showCalendar" @confirm="onConfirm" />
+				<van-calendar :minDate="new Date(1970,1,1)" v-model="showCalendar" @confirm="onConfirm" />
 				<div class="create-btn" @click="insertDeduction">生成抵用券</div>
 			</div>
 			<div class="info">

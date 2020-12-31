@@ -19,9 +19,9 @@
               </van-radio-group>
             </template>
           </van-field>
-          <van-field readonly is-link name="calendar" v-model="query.birthday" label="宝宝生日" placeholder="请选择宝宝生日"
+          <van-field  readonly is-link name="calendar" v-model="query.birthday" label="宝宝生日" placeholder="请选择宝宝生日"
             @click="showCalendar = true" :error-message="verification.birthday" @input="VerifyCellBirthday" />
-          <van-calendar v-model="showCalendar" @confirm="onConfirm" />
+          <van-calendar :minDate="new Date(1970,1,1)" v-model="showCalendar" @confirm="onConfirm" />
         </van-form>
         <van-button class="btn" round block color="#FC4B4C" native-type="submit" @click="submit">立即预约</van-button>
       </div>

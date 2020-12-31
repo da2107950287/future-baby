@@ -70,12 +70,12 @@
           </MySelect>
           <van-field v-if="isShow" v-model="query.legalOccupationDesc" rows="1" autosize label="法人职业详细描述"
             type="textarea" placeholder="请输入法人职业详细描述" />
-          <van-field readonly is-link name="calendar" v-model="query.legalCardBegindate" label="法人代表证件开始日期"
+          <van-field readonly is-link name="calendar"  v-model="query.legalCardBegindate" label="法人代表证件开始日期"
             placeholder="请选择" @click="showCalendar1 = true" :error-message="verification.birthday" @change="" />
-          <van-calendar v-model="showCalendar1" @confirm="onConfirm1" />
+          <van-calendar :minDate="new Date(1970,1,1)" v-model="showCalendar1" @confirm="onConfirm1" />
           <van-field readonly is-link name="calendar" v-model="query.legalCardDeadline" label="法人代表证件截止日期"
             placeholder="请选择" @click="showCalendar2 = true" :error-message="verification.birthday" @change="" />
-          <van-calendar v-model="showCalendar2" @confirm="onConfirm2" />
+          <van-calendar :minDate="new Date(1970,1,1)" v-model="showCalendar2" @confirm="onConfirm2" />
         </van-form>
       </div>
       <div class="form-image">
@@ -290,6 +290,7 @@
     data() {
 
       return {
+     
         url: '',
         isShow: false,
         showCalendar1: false,
@@ -397,7 +398,7 @@
         config: {},
         region: '',//地区
         mccCode: "",//行业类别编码
-        minDate: new Date(2010, 0, 1),
+        // minDate: new Date(2010, 0, 1),
         show: '',
         mccCodeArr: [],
 
@@ -805,7 +806,6 @@
         if (!this.VerifyCellRegion()) return false;
         if (!this.VerifyCellShopRoad()) return false;
         if (!this.VerifyCellShopHouseNo()) return false;
-        if (!this.VerifyCellShopAddrExt()) return false;
         if (!this.VerifyCellLicenseType()) return false;
         if (!this.VerifyCellBankAcctType()) return false;
         if (!this.VerifyCellMccCode()) return false;
@@ -863,7 +863,8 @@
           merId: this.query.merId
         }).then(res => {
           if (res.code == 200) {
-            this.$toast.success(res.msg)
+            this.$toast.success(res.msg);
+            this.showMerchants();
           } else if (code == 500) {
             this.$toast.fail(res.msg);
           }
@@ -995,15 +996,6 @@
           return true;
         }
       },
-      VerifyCellShopAddrExt() {
-        if (this.query.shopAddrExt == '') {
-          this.verification.shopAddrExt = '营业地址补充信不能为空';
-          return false;
-        } else {
-          this.verification.shopAddrExt = "";
-          return true;
-        }
-      },
       VerifyCellLicenseType() {
         if (this.query.licenseType == '') {
           this.verification.licenseType = '营业执照类型不能为空';
@@ -1040,9 +1032,6 @@
           return true;
         }
       }
-
-
-
     },
     components: {
       NavBar,

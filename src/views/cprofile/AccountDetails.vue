@@ -8,7 +8,7 @@
       <div class="total">
         <div class="total-left">总计：共{{transactionNumber}}笔，收入/充值{{income}}元，消费{{expenditure}}</div>
         <img @click="showCalendar = true" class="total-right" src="~assets/img/icon_clen.png" alt="">
-        <van-calendar v-model="showCalendar" :min-date="minDate" @confirm="onConfirm" />
+        <van-calendar :minDate="new Date(1970,1,1)" v-model="showCalendar"  @confirm="onConfirm" />
       </div>
       <div class="detail">
         <van-pull-refresh v-model="isLoading" @refresh="onRefresh">
@@ -43,7 +43,7 @@
         loading: false,// 是否处于加载状态
         finished: false,// 是否已加载完成
         showCalendar: false,//是否显示日历
-        minDate: new Date(2010, 0, 1),
+        // minDate: new Date(1970, 01, 01),
         datatime: "",
         income: "",//收入
         expenditure: "",//消费
