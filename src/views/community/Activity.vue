@@ -1,38 +1,11 @@
 <template>
-  <div>
-    <NavBar>
-      <div slot="center">网点活动</div>
-    </NavBar>
-    <div class="content">
-     <NewsItem>
-       <div slot="tab">儿童之家</div>
-     </NewsItem>
-     <NewsItem></NewsItem>
-    </div>
-  </div>
-  </div>
+  <CommunityItem title="网点活动" oflSort="6" ></CommunityItem>
 </template>
 <script>
-  import NavBar from 'components/common/navbar/NavBar.vue';
-  import NewsItem from 'components/page/NewsItem.vue';
+  import CommunityItem from "components/page/CommunityItem.vue"
   export default {
-    data() {
-      return {
-
-      }
-    },
     components: {
-      NavBar,
-      NewsItem
+      CommunityItem
     }
   }
 </script>
-<style lang="scss" scoped>
-  @import '~assets/css/mixin.scss';
-
-  .content {
-    
-
-   
-  }
-</style>

@@ -10,35 +10,47 @@
       <img slot="active-icon" src="~assets/img/home/bbzj_a.png" alt="">
       <div slot="text">宝贝之家</div>
     </tab-bar-item>
-    <tab-bar-item link="/cart">
+    <tab-bar-item link="/outlets">
       <img slot="icon" src="~assets/img/home/wd.png" alt="">
       <img slot="active-icon" src="~assets/img/home/wd_a.png" alt="">
       <div slot="text">网点</div>
     </tab-bar-item>
-    <tab-bar-item link="/1">
+    <tab-bar-item link="/community">
       <img slot="icon" src="~assets/img/home/cyzx.png" alt="">
       <img slot="active-icon" src="~assets/img/home/cyzx_a.png" alt="">
       <div slot="text">创业中心</div>
     </tab-bar-item>
-    <tab-bar-item link="/profile">
+    <tab-bar-item  :link="link">
       <img slot="icon" src="~assets/img/home/my.png" alt="">
       <img slot="active-icon" src="~assets/img/home/my_a.png" alt="">
       <div slot="text">我的</div>
     </tab-bar-item>
+    <!-- <tab-bar-item v-else link="/bprofile">
+      <img slot="icon" src="~assets/img/home/my.png" alt="">
+      <img slot="active-icon" src="~assets/img/home/my_a.png" alt="">
+      <div slot="text">我的</div>
+    </tab-bar-item> -->
+
   </tab-bar>
 </template>
 
-  <script>
-    import TabBar from '../../common/tabbar/TabBar.vue'
-    import TabBarItem from '../../common/tabbar/TabBarItem'
-
-    export default {
-      name: "MainTabBar",
-      components: {
-        TabBar, TabBarItem
+<script>
+  import TabBar from '../../common/tabbar/TabBar.vue'
+  import TabBarItem from '../../common/tabbar/TabBarItem'
+  import { getStore } from 'assets/js/utils.js'
+  export default {
+    name: "MainTabBar",
+    computed: {
+      link(){
+        return getStore('link') || '/cprofile'
       }
+    },
+    components: {
+      TabBar,
+      TabBarItem
     }
-  </script>
+  }
+</script>
 
 <style scoped>
 

@@ -1,9 +1,21 @@
 <template>
   <div class="item">
-    <img src="" alt="">
-    <div class="dec">玩具国系列课程：把玩具送到你家</div>
+    <img :src="item.purl" alt="">
+    <div class="dec">{{item.title}}</div>
   </div>
 </template>
+<script>
+  export default{
+    props:{
+      item:{
+        type:Object,
+        default(){
+          return {};
+        }
+      }
+    }
+  }
+</script>
 <style lang="scss" scoped>
   @import '~assets/css/mixin.scss';
    .item {
@@ -20,7 +32,7 @@
           border-radius: 0.5rem;
         }
         .dec{
-          @include ellipse();
+          @include ellipsis();
         }
       }
 </style>

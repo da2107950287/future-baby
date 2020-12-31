@@ -14,13 +14,13 @@
 
 <style scoped>
   .wrap{
-    height: 2.45rem;
+    height: 49px;
   }
   #tab-bar {
     /* 本身的样式 */
     background-color: #fff;
-    height: 2.45rem;
-    box-shadow: 0rem -0.1rem 0.2rem 0rem #EDEDED;
+    height: 49px;
+    box-shadow: 0px -1px 1px #EDEDED;
 
     /* 定位相关 */
     position: fixed;

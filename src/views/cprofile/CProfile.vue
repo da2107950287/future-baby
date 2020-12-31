@@ -2,82 +2,117 @@
   <div class="c-profile">
     <LogoTel class="logotel"></LogoTel>
     <div class="img-box">
-      <div class="left">
-        <img src="" alt="">
-        <div>凌子就</div>
+      <div class="info-left">
+        <img :src="headportrait" alt="">
+        <div>{{nickname}}</div>
       </div>
-      <router-link tag="div" to="/PersonalInfo" class="right">
+      <router-link tag="div" to="/PersonalInfo" class="info-right">
         <span>查看</span>
         <div class="iconfont icon-fanhui2"></div>
       </router-link>
     </div>
-    <div class="card">
+    <div class="card" v-for="item in list" :key="item.mebId">
       <div class="card-left">
         <div>
-          <span class="name">未来宝贝成都高新中心</span>
+          <span class="name">{{item.olsName}}</span>
           <span class="status">在学</span>
         </div>
-        <div class="date">有效期：2022年9月23日</div>
+        <div class="date">有效期：{{item.endTime | formatTime}}</div>
       </div>
-      <div class="card-right">续费</div>
+      <div class="card-right" @click="$router.push({path:'/orderPayment',query:{olsId:item.olsId}})">续费</div>
     </div>
     <div class="order">
       <div class="title">
         <span class="left">我的订单</span>
-        <router-link tag="div" to="/corder" class="right">
+        <div tag="div" @click="$router.push({path:'/corder',query:{activeName:'0'}})" class="right">
           <span>全部订单</span>
           <div class="iconfont icon-fanhui2"></div>
-        </router-link >
+        </div>
       </div>
       <div class="items">
-        <div class="item">
+        <div class="item" @click="$router.push({path:'/corder',query:{activeName:'1'}})">
           <img src="~assets/img/cprofile/icon_jinxinzhong.png" alt="">
           <div>进行中</div>
         </div>
-        <div class="item">
+        <!-- <div class="item"@click="$router.push({path:'/corder',query:{account-title:'0'}})">
           <img src="~assets/img/cprofile/icon_xindingdan.png" alt="">
           <div>新订单</div>
-        </div>
-        <div class="item">
+        </div> -->
+        <div class="item" @click="$router.push({path:'/corder',query:{activeName:'2'}})">
           <img src="~assets/img/cprofile/icon_guoqi.png" alt="">
           <div>即将过期</div>
         </div>
-        <div class="item">
+        <div class="item" @click="$router.push({path:'/corder',query:{activeName:'3'}})">
           <img src="~assets/img/cprofile/icon_shixiao.png" alt="">
           <div>失效订单</div>
         </div>
       </div>
     </div>
-    <img class="activity" src="" alt="">
+    <van-swipe class="my-swipe activity" :autoplay="3000" indicator-color="white">
+      <van-swipe-item  v-for="item in banners" :key="item.banId"   @click=" $router.push({path:'/details',query:{banId:item.banId}})">
+        <img :src="item.purl" alt="">
+      </van-swipe-item>
+
+    </van-swipe>
     <div class="itembars">
-      <div class="item">
+      <!-- <div class="item1" @click="$router.push('/cAccountInfo')">
         <img src="~assets/img/cprofile/icon_cash.png" alt="">
         <div>账号余额</div>
-      </div>
-      <div class="item">
-        <img src="~assets/img/cprofile/icon_follows.png" alt="">
+      </div> -->
+      <div class="item1" @click="$router.push('/pointsOfConcern')">
+        <div class="img-box">
+          <img src="~assets/img/cprofile/icon_follows.png" alt="">
+        </div>
         <div>关注网点</div>
       </div>
-      <div class="item">
-        <img src="~assets/img/cprofile/icon_quan.png" alt="">
+      <div class="item1" @click="$router.push('/cVouchers')">
+
+        <div class="img-box">
+          <img src="~assets/img/cprofile/icon_quan.png" alt="">
+
+        </div>
         <div>抵扣券</div>
       </div>
-      <div class="item">
-        <img src="~assets/img/cprofile/icon_collets.png" alt="">
+      <div class="item1" @click="$router.push('/MyCollection')">
+        <div class="img-box">
+          <img src="~assets/img/cprofile/icon_collets.png" alt="">
+
+        </div>
         <div>收藏</div>
       </div>
-      <div class="item">
-        <img src="~assets/img/cprofile/icon_zix.png" alt="">
+      <div class="item1" @click="$router.push('/onlineConsulting')">
+        <div class="img-box">
+          <img src="~assets/img/cprofile/icon_zix.png" alt="">
+
+
+        </div>
         <div>在线咨询</div>
       </div>
-      <div class="item">
-        <img src="~assets/img/cprofile/icon_about_us.png" alt="">
+      <div class="item1" @click="$router.push('/aboutUs')">
+        <div class="img-box">
+          <img src="~assets/img/cprofile/icon_about_us.png" alt="">
+
+        </div>
         <div>关于我们</div>
       </div>
-      <div class="item">
-        <img src="~assets/img/cprofile/icon_shez.png" alt="">
+
+      <div class="item1" @click="$router.push('/setting')">
+        <div class="img-box">
+          <img src="~assets/img/cprofile/icon_shez.png" alt="">
+
+        </div>
         <div>设置</div>
       </div>
+      <div class="item1" @click="$router.push('/applyNetwork')">
+        <div class="img-box">
+          <img src="~assets/img/cprofile/apply.png" alt="">
+
+        </div>
+        <div>申请商户</div>
+      </div>
+    </div>
+    <div v-if="role==2" style="padding: .5rem 5rem 1rem;">
+      <van-button plain round block type="danger" @click="exchange">切换至商户端</van-button>
     </div>
     <MainTabBar></MainTabBar>
   </div>
@@ -86,11 +121,62 @@
 <script>
   import LogoTel from 'components/page/LogoTel.vue';
   import MainTabBar from "components/page/mainTabbar/MainTabBar.vue"
+  import { getStore, setStore } from "assets/js/utils.js"
 
   export default {
     data() {
       return {
+        banners: [],//banner列表
+        list: [],
+        nickname: '',//昵称
+        headportrait: '',//头像
+        role: '',//角色
+      }
+    },
+    filters: {
+      formatTime(val) {
+        let arr = val.split(' ')[0].split('-')
+        return arr[0] + '年' + arr[1] + '月' + arr[2] + '日'
+      }
+    },
+    mounted() {
+      this.showUserinfo();
+      this.getUserMember();
+      this.getBanner();
 
+    },
+    methods: {
+      //获取banner列表
+      getBanner() {
+        this.$http('/other/getBanner', {
+          positions: 4
+        }).then(res => {
+          if (res.code == 200) {
+            this.banners = res.data;
+          }
+        })
+      },
+      getUserMember() {
+        this.$http('/orderlist/getUserMember').then(res => {
+          if (res.code == 200) {
+            this.list = res.data;
+          }
+        })
+      },
+      showUserinfo() {
+        this.$http('/userinfo/showUserinfo', {
+          uid: getStore('uid')
+        }).then(res => {
+          if (res.code == 200) {
+            this.nickname = res.data.nickname;
+            this.headportrait = res.data.headportrait;
+            this.role = res.data.role;
+          }
+        })
+      },
+      exchange() {
+        setStore('link', '/bprofile');
+        this.$router.push('/bprofile')
       }
     },
     components: {
@@ -112,14 +198,13 @@
       @include fj();
       padding: 0 1rem;
 
-      .left {
+      .info-left {
         @include fj();
         align-items: center;
 
         img {
           @include wh(2.5rem, 2.5rem);
           border-radius: 50%;
-          background: #000;
           margin-right: .5rem;
         }
 
@@ -132,10 +217,11 @@
         }
       }
 
-      .right {
+      .info-right {
         @include fj();
         @include sc(.6rem, #aaa);
         align-items: center;
+
         font-family: PingFangSC-Regular, PingFang SC;
 
 
@@ -151,7 +237,7 @@
     .card {
       @include fj();
       align-items: center;
-      margin: 1.5rem 1rem;
+      margin: 1.5rem 1rem 0;
       padding: .8rem .85rem .8rem 1rem;
       background: #FFEFDB;
       border-radius: .5rem;
@@ -199,6 +285,8 @@
 
     .order {
       padding: 0 1rem;
+      background: $fc;
+      margin-top: 1.5rem;
 
       .title {
         @include fj();
@@ -214,7 +302,7 @@
         .right {
           @include fj();
           @include sc(.6rem, #aaa);
-          font-family: PingFangSC-Regular, PingFang SC;
+          cursor: pointer;
 
           div:last-child {
 
@@ -226,15 +314,21 @@
       }
 
       .items {
-        @include fj(space-around);
+        @include fj(flex-start);
         margin-top: .8rem;
         align-items: center;
 
+
         .item {
-          text-align: center;
+          @include fj();
+          flex-direction: column;
+          align-items: center;
+          width: 25%;
+          cursor: pointer;
 
           img {
             @include wh(1.5rem, 1.5rem);
+            margin-bottom: .25rem
           }
 
           div {
@@ -250,7 +344,12 @@
       @include wh(16.75rem, 3.5rem);
       margin: 1.5rem 1rem;
       border-radius: 0.3rem;
-      background: #000;
+
+      img {
+        @include wh(16.75rem, 3.5rem);
+
+      }
+
 
     }
 
@@ -259,13 +358,15 @@
       @include fj(flex-start);
       flex-wrap: wrap;
 
-      .item {
+      .item1 {
         width: 25%;
         margin-bottom: 1.5rem;
         text-align: center;
 
-        img {
-          @include wh(1.5rem, 1.5rem);
+        .img-box {
+          @include wh(100%, 1.5rem);
+          @include fj(center);
+          align-items: center;
         }
 
         div {

@@ -44,15 +44,15 @@
 
   .item-icon img,
   .item-active-icon img {
-    width: 1.2rem;
-    height: 1.2rem;
-    margin-top: .15rem;
+    width: 24px;
+    height: 24px;
+    /* margin-top: 5px; */
     vertical-align: middle;
   }
 
   .item-text {
-    font-size: 0.6rem;
-    margin-top: 3px;
+    font-size: 12px;
+    /* margin-top: 3px; */
     color: #999;
   }
 </style>

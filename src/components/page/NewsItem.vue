@@ -1,22 +1,37 @@
 <template>
   <div class="news-item">
-    <img src="" alt="">
+    <img  :src="item.purl" alt="">
     <div class="right">
-      <div class="title">未来我们一起加油！10月新园长培训圆满落幕！</div>
+      <div class="title">{{item.title}}</div>
       <div class="right-bottom">
         <!-- <div class="tab"> -->
         <slot class="tab" name="tab"></slot>
         <!-- </div> -->
-        <div class="date">2020.11.20</div>
+        <div class="date">{{item.oflTime | timeFormat }}</div>
       </div>
     </div>
   </div>
 </template>
+<script>
+  import {mixin} from 'assets/js/mixin.js'
+  export default{
+    mixins:[mixin],
+    props:{
+      item:{
+        type:Object,
+        default(){
+          return {};
+        }
+      }
+    },
+  
+  }
+</script>
 <style lang="scss" scoped>
   @import '~assets/css/mixin.scss';
 
   .news-item {
-    padding: .75rem 1rem;
+    padding: .75rem 0;
     margin-bottom: .25rem;
     border-bottom: 1px solid #eee;
     @include fj();
@@ -24,7 +39,6 @@
     img {
       @include wh(5.25rem, 3.9rem);
       border-radius: 0.3rem;
-      background: #000;
       margin-right: .5rem;
     }
 
@@ -34,7 +48,7 @@
 
       .title {
         @include sc(.75rem, #333);
-        @include ellipse();
+        @include ellipsis();
         font-family: PingFangSC-Medium, PingFang SC;
         font-weight: 500;
 

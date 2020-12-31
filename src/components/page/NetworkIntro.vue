@@ -1,32 +1,46 @@
 <template>
   <div class="network-intro">
     <div class="network-name-box">
-      <div class="name">未来宝贝成都高新中心</div>
-      <div><slot name="btn"></slot></div>
+      <div class="name">{{olsName}}</div>
+      <div>
+        <slot name="btn"></slot>
+      </div>
     </div>
     <div class="icon-box">
       <span class="iconfont icon-weizhi icon"></span>
-      <div class="location">四川省成都市双流区华阳华府大道一段655号</div>
+      <div class="location">{{address}}</div>
     </div>
     <div class="icon-box">
       <span class="iconfont icon-dianhua icon"></span>
-      <div class="tel">19954271652</div>
+      <div class="tel">{{mobile}}</div>
     </div>
   </div>
 </template>
 <script>
-  export default{
-    props:{
-
+  export default {
+    props: {
+      olsName:{
+        type: String,
+        default() {
+          return ''
+        }
+      },
+      address: {},
+      mobile:{
+        type:String,
+        default(){
+          return ''
+        }
+      }
     }
   }
 </script>
 <style lang="scss" scoped>
   @import '~assets/css/mixin.scss';
-  
+
   .network-intro {
     padding: .75rem 0;
-    
+
 
     .network-name-box {
       @include fj();
@@ -39,7 +53,7 @@
         color: #333333;
       }
 
-      
+
 
     }
 

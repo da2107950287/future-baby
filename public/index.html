@@ -1,17 +1,97 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <link rel="icon" href="<%= BASE_URL %>favicon.ico">
-    <title><%= htmlWebpackPlugin.options.title %></title>
-  </head>
-  <body>
-    <noscript>
-      <strong>We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
-    </noscript>
-    <div id="app"></div>
-    <!-- built files will be auto injected -->
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+  <link rel="icon" href="<%= BASE_URL %>favicon.ico">
+  <title>
+    <%= htmlWebpackPlugin.options.title %>
+  </title>
+  <style>
+    .page {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 100;
+      width: 100%;
+      height: 100%;
+      background-color: #fff;
+    }
+
+    #loading {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      -webkit-transform: translate(-50%, -50%);
+      transform: translate(-50%, -50%);
+
+      ;
+    }
+
+    @keyframes ball-beat {
+      50% {
+        opacity: .2;
+        transform: scale(.75);
+      }
+
+      100% {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    .ball-beat>div {
+      background-color: #FC4B4C;
+      width: 10px;
+      height: 10px;
+      border-radius: 100% !important;
+      margin: 2px;
+      animation-fill-mode: both;
+      display: inline-block;
+      animation: ball-beat .7s 0s infinite linear;
+    }
+
+    .ball-beat>div:nth-child(2n-1) {
+      animation-delay: .35s !important;
+    }
+
+    .text {
+      font-size: 12px;
+      text-align: center;
+      color: #aaa;
+    }
+  </style>
+</head>
+
+<body>
+  <noscript>
+    <strong>We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work properly without JavaScript enabled.
+        Please enable it to continue.</strong>
+  </noscript>
+  <div id="app">
+    <div class="page">
+      <div id="loading">
+        <div class="loader-inner ball-beat">
+          <div></div>
+          <div></div>
+          <div></div>
+        </div>
+        <div class="text">努力加载中...</div>
+      </div>
+    </div>
+  </div>
+  <!-- built files will be auto injected -->
+  <script src="http://res2.wx.qq.com/open/js/jweixin-1.6.0.js"></script>
+  <script type="text/javascript"
+    src="https://api.map.baidu.com/api?type=webgl&v=1.0&ak=FZejf8yCMk68LviMICdIVfAE7lOgNWkm"></script>
+    <script src="http://wechatfe.github.io/vconsole/lib/vconsole.min.js?v=3.2.0"></script>
+    <script src="http://wechatfe.github.io/vconsole/lib/vconsole.min.js?v=3.2.0"></script>
+  <script>
+          var vConsole = new VConsole();
+  </script>
   </body>
+
 </html>

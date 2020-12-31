@@ -1,5 +1,6 @@
 module.exports = {
-  publicPath: './',
+  publicPath: process.env.NODE_ENV === 'production' ? './' : '/',
+  outputDir: 'futureBaby',
   productionSourceMap: false,
   configureWebpack: {
     resolve: {
@@ -13,14 +14,35 @@ module.exports = {
     },
 
   },
-  // devServer: {
-  //   proxy: {
-  //     "/treasurebsg": {
-  //       target: "http://47.111.244.224:81/treasurebsg",
-  //       changeOrigin: true,
-  //       pathRewrite: { '^/treasurebsg': '' }
-  //     },
+  devServer: {
+    // host:'dragonworld.top',
+    // port:80,
+    // proxy:"http://112.74.163.209",
+
+    proxy: {
+      "/interface": {
+        target: "http://ebooktest.trhui.com/interface",
+        changeOrigin: true,
+        logLevel:'debug',
+        pathRewrite: { '/interface': '' }
+      },
+      "/paymentutil": {
+        target: "http://47.101.219.181:10888/paymentutil",
+        changeOrigin: true,
+        logLevel:'debug',
+        pathRewrite: { '/paymentutil': '' }
+      },
       
-  //   }
-  // }
+      "/api": {
+        target: "http://112.74.163.209",
+        changeOrigin: true,
+        logLevel:'debug',
+        pathRewrite: { '/api': '' }
+      },
+     
+     
+      
+      
+    }
+  }
 }

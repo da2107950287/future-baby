@@ -1,45 +1,63 @@
 <template>
-  <div id="nav-bar">
-    <div class="nav-left"><slot name="left"><span class="iconfont icon-fanhui2 icon"></span></slot></div>
-    <div class="nav-center"><slot name="center">标题</slot></div>
-    <div class="nav-right"><slot name="right"></slot></div>
+  <div class="height44">
+    <div id="nav-bar">
+      <div class="nav-left">
+        <slot name="left"><span class="iconfont icon-fanhui2 icon" @click="$router.go(-1)"></span></slot>
+      </div>
+      <div class="nav-center">
+        <slot name="center">标题</slot>
+      </div>
+      <div class="nav-right">
+        <slot name="right"></slot>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-	export default {
-		name: "NavBar"
-	}
+  export default {
+    name: "NavBar"
+  }
 </script>
 
 <style scoped>
-  #nav-bar {
-    position: relative;
-    z-index: 10;
-
-    display: flex;
-
+  .height44 {
     height: 44px;
+    background: #fff;
+  }
+
+  #nav-bar {
+    position: fixed;
+
+    top: 0;
+    display: flex;
+z-index: 1;
+    height: 44px;
+    width: 100%;
     line-height: 44px;
     text-align: center;
-
-    /*border-bottom: 1px solid #eee;*/
-    /*box-shadow: 0 1px 1px rgba(100,100,100,.08);*/
+    color: #333333;
+    background-color: #fff;
   }
 
   .nav-left {
+    position: absolute;
+    left: 0;
     width: 40px;
-    .icon{
-      color: #333333;
 
-    }
   }
 
   .nav-center {
     flex: 1;
+    font-family: PingFangSC-Medium, PingFang SC;
+    font-weight: 500;
+
   }
 
   .nav-right {
-    width: 40px;
+    position: absolute;
+    right: 0;
+    font-size: 0.7rem;
+    margin-right: 1rem;
   }
 </style>
