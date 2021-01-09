@@ -26,13 +26,13 @@
         </div>
         <van-action-sheet v-model="showPicker" title="请选择您所在城市">
           <div class="city-content">
-            <div v-if="!province">
+            <div>
               <div class="title">热门城市</div>
               <div class="hot-cities">
-                <div class="city" v-for="item in cities" @click="selectCity(item)">{{item}}</div>
+                <div class="city" v-for="item in cities" @click="selectCity1(item)">{{item}}</div>
               </div>
             </div>
-            <div v-else>
+            <div>
               <div class="step" style="display: inline-block;">
                 <div class="circle"></div>
                 <div class="line"></div>
@@ -40,7 +40,7 @@
               </div>
               <div style="display: inline-block;">
                 <van-field readonly clickable @click="isShow=1" v-model="province" placeholder="请选择省份" />
-                <van-field readonly clickable @click="isShow=2" v-model="city" placeholder="请选择城市" />
+                <van-field readonly clickable @click="isShow=2;" v-model="city1" placeholder="请选择城市" />
               </div>
             </div>
             <div class="title">选择省份/城市</div>
@@ -56,7 +56,6 @@
                   {{item.value}}
                 </div>
               </div>
-
             </div>
           </div>
         </van-action-sheet>
@@ -94,7 +93,7 @@
     <PopUp :show="showToast">
       <div slot="title">提示</div>
       <div slot="dec">该网点筹备中，暂无信息展示，尽情期待！</div>
-      <div slot="redBtn" @click="showToast=false">确认</div>
+      <div slot="btn" class="red btn" @click="showToast=false">确认</div>
     </PopUp>
     <MainTabBar></MainTabBar>
     <div id='allmap'></div>
@@ -107,7 +106,7 @@
   import MainTabBar from "components/page/mainTabbar/MainTabBar.vue";
   import PopUp from "components/page/PopUp.vue"
   import region from "assets/js/region.js"
-  import { chineseLetter,getStore } from "assets/js/utils.js";
+  import { chineseLetter, getStore, setStore } from "assets/js/utils.js";
   import { getLocation } from "assets/js/wx.js";
 
   export default {
@@ -121,31 +120,83 @@
         isLoading: false,// 是否处于加载中状态
         loading: false,// 是否处于加载状态
         finished: false,// 是否已加载完成
-        latitude: getStore('latitude'),//经度
-        longitude: getStore('longitude'),//纬度
-        city: getStore("city"),//城市
-        province: getStore('province'),//省份
+        latitude: '',//经度
+        longitude: '',//纬度
+        city: '',//城市
+        city1: '',
+        province: '',//省份
         cityList: [],//城市列表
         provinceList: [],//省份列表
         banners: [],//banner列表
         list: [],//网点列表
         config: {},
-        cities: ["北京", "上海", "广州", "深圳", "杭州", "成都"],//热门城市
+        cities: ["北京", "上海", "杭州", "广州", "深圳", "南京", "成都", "天津", "武汉"],//热门城市
         mobile: "",//平台电话
         logo: "",//平台logo
       }
     },
+    created() {
+      if (getStore('latitude') && getStore('longitude') && getStore('city') && getStore('province')) {
+        this.latitude = getStore('latitude');
+        this.longitude = getStore('longitude');
+        this.city = getStore('city');
+        this.province = getStore('province')
+        this.city1 = getStore('city');
+        this.getOutlets();
+      } else {
+        this.getAppConfig()
+      }
+    },
     mounted() {
-      // this.getAppConfig()
+
       this.getBanner();
       // this.getOutlets();
       this.provinceList = chineseLetter(this.objToArr('86'), 'value');
-      this.getPoint();
+      // this.getPoint();
       this.getConfig();
       // this.getLocationCity()
-      this.getOutlets();
+
     },
     methods: {
+      getAppConfig() {
+        this.$http('/userinfo/getConfig', {
+          url: window.location.href.split('#')[0]
+        }).then(res => {
+
+          if (res.code == 200) {
+            this.config = res.data;
+            getLocation(this.config).then(result => {
+              this.longitude = result.longitude;
+              this.latitude = result.latitude;
+              setStore('longitude', result.longitude);
+              setStore('latitude', result.latitude);
+              this.getLocationCity(this.longitude, this.latitude);
+            }).catch(err => {
+              // this.$toast.fail('获取地理位置失败')
+
+            })
+          }
+        })
+      },
+      //指定经纬度获取地址
+      getLocationCity(longitude, latitude) {
+        var map = new BMapGL.Map("allmap");
+        map.centerAndZoom(new BMapGL.Point(longitude, latitude), 12);
+        // 创建地理编码实例      
+        var myGeo = new BMapGL.Geocoder();
+        // 根据坐标得到地址描述    
+        myGeo.getLocation(new BMapGL.Point(longitude, latitude), (reslut) => {
+          if (reslut) {
+            this.province = reslut.addressComponents.province;
+            this.city = reslut.addressComponents.city;
+            this.city1 = reslut.addressComponents.city
+            setStore('province', reslut.addressComponents.province)
+            setStore('city', reslut.addressComponents.city)
+            this.getOutlets()
+          }
+        });
+      },
+
       getConfig() {
         this.$http('/other/showConfig').then(res => {
           if (res.code == 200) {
@@ -154,36 +205,51 @@
           }
         })
       },
-     
-      //根据地址描述获得坐标信息
-      getPoint() {
-        var map = new BMapGL.Map('allmap');
-        //创建地址解析器实例
-        var myGeo = new BMapGL.Geocoder();
-        // 将地址解析结果显示在地图上，并调整地图视野
-        myGeo.getPoint(this.city, point => {
-          if (point) {
-            this.latitude = point.lat;
-            this.longitude = point.lng;
-            this.getOutlets();
-          } else {
-            console.log("地址解析没有结果")
-          }
-        }, this.city)
+
+      // //根据地址描述获得坐标信息
+      // getPoint() {
+      //   var map = new BMapGL.Map('allmap');
+      //   //创建地址解析器实例
+      //   var myGeo = new BMapGL.Geocoder();
+      //   // 将地址解析结果显示在地图上，并调整地图视野
+      //   myGeo.getPoint(this.city, point => {
+      //     if (point) {
+      //       this.latitude = point.lat;
+      //       this.longitude = point.lng;
+      //       this.getOutlets();
+      //     } else {
+      //       console.log("地址解析没有结果")
+      //     }
+      //   }, this.city)
+      // },
+      selectCity1(city) {
+        this.city = city;
+        this.provinceId = ''
+        this.province = '';
+        this.city1 = ''
+        this.showPicker = false;
+        this.PageNumber = 1;
+        this.list = [];
+        this.getOutlets();
+
+        // this.getPoint();
+
       },
       //选择城市
       selectCity(city) {
+        this.city1 = city;
         this.city = city;
         this.showPicker = false;
         this.PageNumber = 1;
-        this.list = []
-        this.getPoint();
+        this.list = [];
+        this.getOutlets()
+        // this.getPoint();
 
       },
       //获取城市列表
       getCityList(value, id) {
         this.province = value;
-        this.city = "";
+        this.city1 = "";
         this.isShow = 2;
         this.cityList = chineseLetter(this.objToArr(id), 'value');
       },
@@ -211,9 +277,9 @@
       getOutlets() {
         this.loading = true;
         this.$http('/outlets/getOutlets', {
-          latitude: this.latitude,
-          longitude: this.longitude,
-          city: this.city,
+          latitude: this.latitude || '',
+          longitude: this.longitude || '',
+          city: this.city || '',
           PageNumber: this.PageNumber,
           PageSize: this.PageSize,
         }).then(res => {
@@ -224,7 +290,6 @@
             if (this.PageSize == res.data.length) {
               window.addEventListener("scroll", this.handleScroll)
             } else {
-              console.log(789)
               this.finished = true;
             }
           }
@@ -306,6 +371,20 @@
     img {
       @include wh(4.7rem, 1.5rem)
     }
+  }
+
+  .btn {
+    @include wh(10.5rem, 2rem);
+    text-align: center;
+    line-height: 2rem;
+    font-size: .75rem;
+    border-radius: 0.2rem;
+  }
+
+  .red {
+    background: #FC4B4C;
+    color: $fc;
+    margin-top: 1rem;
   }
 
   .outlets {
@@ -473,6 +552,10 @@
 
             .name {
               @include sc(.75rem, #333);
+              overflow: hidden;
+              white-space: nowrap;
+              text-overflow: ellipsis;
+
 
             }
 

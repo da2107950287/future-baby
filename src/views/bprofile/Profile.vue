@@ -26,11 +26,11 @@
 		</div>
 		<div class="function-tab">
 			<div class="account">
-				<div @click="goUrl('/account_info')">
+				<!-- <div @click="goUrl('/account_info')">
 					<div><img src="~assets/img/bprofile/icon_cash_b.png" alt=""></div>
 					<div class="account-title">账户余额</div>
 					<div class="pointer"><i class="right"></i></div>
-				</div>
+				</div> -->
 				<!-- <div @click="$router.push({path:'voucher',query:{olsId:info.olsId}})"> -->
 				<div @click="$router.push({path:'/voucher_list',query:{olsId:info.olsId}})">
 					<div><img src="~assets/img/bprofile/icon_quan_b.png" alt=""></div>
@@ -38,7 +38,7 @@
 					<div class="pointer"><i class="right"></i></div>
 				</div>
 			</div>
-			<div class="list">
+			<div v-if="role==2 || role==3" class="list">
 				<div class="list-title">
 					<div class="list-title-name">订单管理</div>
 					<div class="all" @click="$router.push({path:'/border',query:{olsId:info.olsId,activeName:'0'}})">
@@ -47,14 +47,15 @@
 					</div>
 				</div>
 				<div class="list-content">
+					<div @click="$router.push({path:'/border',query:{olsId:info.olsId,activeName:'4'}})">
+						<div class="icon"><img src="~assets/img/bprofile/icon_wwc.png" alt=""></div>
+						<div>未付款</div>
+					</div>
 					<div @click="$router.push({path:'/border',query:{olsId:info.olsId,activeName:'1'}})">
 						<div class="icon"><img src="~assets/img/bprofile/icon_ing.png" alt=""></div>
 						<div>进行中</div>
 					</div>
-					<!-- <div @click="$router.push({path:'/border',query:{olsId:info.olsId,activeName:'0'}})">
-						<div class="icon"><img src="~assets/img/bprofile/icon_wwc.png" alt=""></div>
-						<div>未完成</div>
-					</div> -->
+				
 					<div @click="$router.push({path:'/border',query:{olsId:info.olsId,activeName:'2'}})">
 						<div class="icon"><img src="~assets/img/bprofile/icon_outdate.png" alt=""></div>
 						<div>即将过期</div>
@@ -65,7 +66,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="list">
+			<div v-if="role==2 || role==4"  class="list">
 				<div class="list-title">
 					<div class="list-title-name">会员管理</div>
 					<div class="all" @click="$router.push({path:'/member',query:{olsId:info.olsId,activeName:'0'}})">
@@ -74,11 +75,11 @@
 					</div>
 				</div>
 				<div class="list-content">
-					<div @click="$router.push({path:'/member',query:{olsId:info.olsId,activeName:'1'}})">
+					<div @click="$router.push({path:'/member',query:{olsId:info.olsId,activeName:'2'}})">
 						<div class="icon"><img src="~assets/img/bprofile/icon_youx_vip.png" alt=""></div>
 						<div>有效会员</div>
 					</div>
-					<div @click="$router.push({path:'/member',query:{olsId:info.olsId,activeName:'2'}})">
+					<div @click="$router.push({path:'/member',query:{olsId:info.olsId,activeName:'1'}})">
 						<div class="icon"><img src="~assets/img/bprofile/icon_yx.png" alt=""></div>
 						<div>意向会员</div>
 					</div>
@@ -88,36 +89,36 @@
 					</div>
 				</div>
 			</div>
-			<div class="list">
-				<div @click="goUrl('/network')" class="list-title">
+			<div class="list" >
+				<div class="list-title">
 					<div class="list-title-name">网点管理</div>
-					<div class="icon-all">全部</div>
-					<div class="pointer"><i class="right"></i></div>
+				
 				</div>
 				<div class="list-content">
 					<div @click="goUrl('/bussiness')">
 						<div class="icon"><img src="~assets/img/bprofile/icon_sh.png" alt=""></div>
 						<div>商户信息</div>
 					</div>
-					<!-- <div @click="goUrl('/staff')">
+					<div v-if="role==2" @click="$router.push({path:'/staff',query:{olsId:info.olsId}})">
 						<div class="icon"><img src="~assets/img/bprofile/icon_yg.png" alt=""></div>
 						<div>员工管理</div>
-					</div> -->
+					</div>
 					<div @click="goUrl('/teach_plan')">
 						<div class="icon"><img src="~assets/img/bprofile/icon_ja.png" alt=""></div>
 						<div>教案管理</div>
 					</div>
 				</div>
 			</div>
-			<div style="padding: .5rem 4rem 1rem;">
-				<van-button plain round block type="danger" @click="exchange">切换到个人版</van-button>
-			</div>
+		
+		</div>
+		<div style="padding: .5rem 4rem 1rem;">
+			<van-button plain round block type="danger" @click="exchange">切换到个人版</van-button>
 		</div>
 		<MainTabBar></MainTabBar>
 		<van-overlay :show="show" @click="show=false">
 			<div class="wrapper">
 				<div class="block">
-					<img src="../../assets/img/popup.png" alt="">
+					<img src="~assets/img/popup.png" alt="">
 					<div class="title">联系总部客服</div>
 					<div class="tel">电话：{{mobile}}</div>
 					<div class="confirm-btn">确定</div>
@@ -130,7 +131,7 @@
 </template>
 <script>
 	import MainTabBar from "components/page/mainTabbar/MainTabBar.vue"
-	import { setStore } from "assets/js/utils.js"
+	import { setStore,getStore } from "assets/js/utils.js"
 
 	export default {
 		data() {
@@ -138,7 +139,8 @@
 				show: false,
 				mobile: "",
 				logo: "",
-				info: {}
+				info: {},
+				role:getStore('role')
 			}
 		},
 		created() {
@@ -163,6 +165,7 @@
 					if (res.code == 200) {
 						this.info = res.data;
 						setStore("olsId", this.info.olsId)
+						setStore('image',this.info.image)
 					} else if (res.code == 500) {
 						this.$toast.success(res.msg)
 					}
@@ -305,7 +308,7 @@
 
 	.account {
 		width: 100%;
-		height: 110px;
+		/* height: 110px; */
 	}
 
 	.account>div {
@@ -443,7 +446,7 @@
 			}
 
 			.confirm-btn {
-				width: 210px;
+				width: 100%;
 				height: 40px;
 				background: #FC4B4C;
 				border-radius: 4px;
@@ -455,7 +458,7 @@
 			}
 
 			.cancle-btn {
-				width: 210px;
+				width: 100%;
 				height: 40px;
 				border-radius: 4px;
 				font-size: 15px;

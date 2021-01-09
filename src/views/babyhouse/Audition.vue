@@ -13,15 +13,18 @@
             :error-message="verification.mobile" @blur="VerifyCellMobile" />
           <van-field name="radio" label="宝宝性别" :error-message="verification.sex">
             <template #input>
-              <van-radio-group v-model="query.sex" direction="horizontal" >
+              <van-radio-group v-model="query.sex" direction="horizontal">
                 <van-radio checked-color="#FC4B4C" name="男">男</van-radio>
                 <van-radio checked-color="#FC4B4C" name="女">女</van-radio>
               </van-radio-group>
             </template>
           </van-field>
-          <van-field  readonly is-link name="calendar" v-model="query.birthday" label="宝宝生日" placeholder="请选择宝宝生日"
+          <van-field readonly is-link name="calendar" v-model="query.birthday" label="宝宝生日" placeholder="请选择宝宝生日"
             @click="showCalendar = true" :error-message="verification.birthday" @input="VerifyCellBirthday" />
-          <van-calendar :minDate="new Date(1970,1,1)" v-model="showCalendar" @confirm="onConfirm" />
+          <van-popup v-model="showCalendar" position="bottom">
+            <van-datetime-picker v-model="currentDate" type="date" :minDate="minDate" :maxDate="maxDate"
+              @confirm="onConfirm" @cancel="showCalendar = false" />
+          </van-popup>
         </van-form>
         <van-button class="btn" round block color="#FC4B4C" native-type="submit" @click="submit">立即预约</van-button>
       </div>
@@ -35,6 +38,9 @@
   export default {
     data() {
       return {
+        currentDate: new Date(),
+        minDate: new Date(1970, 0, 1),
+        maxDate: new Date(2099, 11, 31),
         query: {
           olsId: '',//网点ID
           fullname: '',//昵称
@@ -56,22 +62,23 @@
     },
     methods: {
       //立即预约
-      submit(values) {
-        if (!this.VerifyCellFullName()) return false;
-        if (!this.VerifyCellMobile()) return false;
-        if (this.query.sex == '') {
-          this.verification.sex = '性别不能为空';
-          return false;
-        }
-        if (!this.VerifyCellBirthday()) return false;
-        this.$http('/outlets/insertSubscribe', this.query).then(res => {
-          if (res.code == 200) {
-            this.$toast.success(res.msg);
-            this.$router.go(-1)
-          } else if (code == 500) {
-            this.$toast.fail(res.msg);
+      submit() {
+          if (!this.VerifyCellFullName()) return false;
+          if (!this.VerifyCellMobile()) return false;
+          if (this.query.sex == '') {
+            this.verification.sex = '性别不能为空';
+            return false;
           }
-        })
+          if (!this.VerifyCellBirthday()) return false;
+          this.$http('/outlets/insertSubscribe', this.query).then(res => {
+            if (res.code == 200) {
+              this.$toast.success(res.msg);
+              this.$router.go(-1)
+            } else if (code == 500) {
+              this.$toast.fail(res.msg);
+            }
+          })
+        
       },
       //验证姓名
       VerifyCellFullName() {

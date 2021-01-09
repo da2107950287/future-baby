@@ -30,14 +30,15 @@
         </div>
       </div>
       <div class="items">
+        <div class="item" @click="$router.push({path:'/corder',query:{activeName:'4'}})">
+          <img src="~assets/img/cprofile/icon_wwc.png" alt="">
+          <div>未付款</div>
+        </div>
         <div class="item" @click="$router.push({path:'/corder',query:{activeName:'1'}})">
           <img src="~assets/img/cprofile/icon_jinxinzhong.png" alt="">
           <div>进行中</div>
         </div>
-        <!-- <div class="item"@click="$router.push({path:'/corder',query:{account-title:'0'}})">
-          <img src="~assets/img/cprofile/icon_xindingdan.png" alt="">
-          <div>新订单</div>
-        </div> -->
+
         <div class="item" @click="$router.push({path:'/corder',query:{activeName:'2'}})">
           <img src="~assets/img/cprofile/icon_guoqi.png" alt="">
           <div>即将过期</div>
@@ -49,7 +50,8 @@
       </div>
     </div>
     <van-swipe class="my-swipe activity" :autoplay="3000" indicator-color="white">
-      <van-swipe-item  v-for="item in banners" :key="item.banId"   @click=" $router.push({path:'/details',query:{banId:item.banId}})">
+      <van-swipe-item v-for="item in banners" :key="item.banId"
+        @click=" $router.push({path:'/details',query:{banId:item.banId}})">
         <img :src="item.purl" alt="">
       </van-swipe-item>
 
@@ -103,10 +105,9 @@
         </div>
         <div>设置</div>
       </div>
-      <div class="item1" @click="$router.push('/applyNetwork')">
+      <div v-if="role!=2" class="item1" @click="$router.push('/applyNetwork')">
         <div class="img-box">
           <img src="~assets/img/cprofile/apply.png" alt="">
-
         </div>
         <div>申请商户</div>
       </div>
@@ -171,6 +172,7 @@
             this.nickname = res.data.nickname;
             this.headportrait = res.data.headportrait;
             this.role = res.data.role;
+            setStore("role", this.role)
           }
         })
       },

@@ -2,14 +2,13 @@
   <div>
     <LogoTel></LogoTel>
     <div class="content">
-     
       <van-pull-refresh v-model="isLoading" @refresh="onRefresh">
         <van-list v-model="loading" :finished="finished" finished-text="暂无更多数据">
           <DynamicItem v-for="(item,index) in list" :key="item.dyId" :item="item"
             @updateClickState="updateClickState(index)" @updateCollState="updateCollState(index)">
             <img slot="headportrait" @click="$router.push({path:'/networkDetail',query:{olsId:item.olsId}})"
               class="head-portrait" :src="item.headportrait" alt="">
-            <div slot="bname" class="bname">{{item.nickname}}</div>
+            <div slot="bname" class="bname"  @click="$router.push({path:'/networkDetail',query:{olsId:item.olsId}})">{{item.nickname}}</div>
           </DynamicItem>
         </van-list>
       </van-pull-refresh>
@@ -103,10 +102,7 @@
           this.list[index].clickNumber--;
         }
         this.list[index].clickState = this.list[index].clickState ^ 1;
-
       },
-   
-
       //修改收藏状态
       updateCollState(index) {
         if (this.list[index].collState == 0) {
@@ -116,7 +112,6 @@
         }
         this.list[index].collState = this.list[index].collState ^ 1;
       },
-
     },
     beforeDestroy() {
       window.removeEventListener("scroll", this.handleScroll)

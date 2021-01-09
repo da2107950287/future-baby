@@ -6,11 +6,7 @@
     </div>
     <div class="card-type">{{card.comName}}</div>
     <div class="detail">
-      <!-- <div>
-        <span>查看详情</span>
-        <span></span>
-      </div> -->
-      <div class="price" @click="$router.push({path:'/orderPayment',query:{olsId:olsId}})">
+      <div class="price" @click="$router.push({path:'/orderPayment',query:{olsId:card.olsId}})">
         ￥<div>{{card.price}}</div>
         <div>购买</div>
       </div>
@@ -26,12 +22,8 @@
           return {};
         }
       },
-      olsId: {
-        type: String,
-        default() {
-          return ''
-        }
-      }
+     
+
     }
   }
 </script>
@@ -85,13 +77,13 @@
         &.price {
           @include wh(5.35rem, 1.5rem);
           @include fj(center);
-          align-items:centre;
+          align-items: centre;
 
           background: #B08E5B;
           border-radius: 0.75rem;
           text-align: center;
           line-height: 1.5rem;
-          
+
 
           div:first-child {
             font-size: .8rem;

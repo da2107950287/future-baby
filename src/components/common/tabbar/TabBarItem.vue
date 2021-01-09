@@ -11,7 +11,6 @@
     </div>
   </div>
 </template>
-
 <script>
   export default {
     name: "TabBarItem",
@@ -26,7 +25,7 @@
         return this.$route.path.indexOf(this.link) !== -1
       },
       activeStyle() {
-        return this.isActive ? { 'color': '#F24142','font-weight':500 } : {}
+        return this.isActive ? { 'color': '#F24142', 'font-weight': 500 } : {}
       }
     },
     methods: {
@@ -40,13 +39,14 @@
 <style scoped>
   #tab-bar-item {
     flex: 1;
+    font-size: 12px;
   }
 
   .item-icon img,
   .item-active-icon img {
     width: 24px;
     height: 24px;
-    /* margin-top: 5px; */
+    margin-top: 5px;
     vertical-align: middle;
   }
 

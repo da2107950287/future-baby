@@ -12,7 +12,7 @@
     </div>
     <div class="icon-box">
       <span class="iconfont icon-dianhua icon"></span>
-      <div class="tel">{{mobile}}</div>
+      <div class="tel" @click="call">{{mobile}}</div>
     </div>
   </div>
 </template>
@@ -32,6 +32,11 @@
           return ''
         }
       }
+    },
+    methods:{
+      call(){
+				window.location.href=`tel://${this.mobile}`;
+			}
     }
   }
 </script>

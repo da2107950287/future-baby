@@ -59,6 +59,7 @@
         time: "",//时间
         purl: '',
         isShow: false,
+        config: {}
       }
     },
     mounted() {
@@ -71,15 +72,15 @@
     methods: {
       getAppConfig() {
         this.$http('/userinfo/getConfig', {
-          url: window.location.href
+          url: window.location.href.split("#")[0]
         }).then(res => {
           console.log(res)
           if (res.code == 200) {
             this.config = res.data;
             let obj = {
-              title: '未来宝贝', // 分享标题
-              desc: this.title,
-              link: window.location.href, // 分享链接
+              title: this.title, // 分享标题
+              desc: '未来宝贝',
+              link: `${window.location.origin}/futureBaby/index.html#/home`, // 分享链接
               imgUrl: this.purl, // 分享图标
             }
             wxShare(this.config, obj, (msg) => {
@@ -141,16 +142,18 @@
       this.title = "";
       this.labels = "";
       this.time = "";
+
+    },
+    destroyed() {
       this.$http('/userinfo/getConfig', {
-        url: window.location.href
+        url: window.location.href.split('#')[0]
       }).then(res => {
-        console.log(res)
         if (res.code == 200) {
           this.config = res.data;
           let obj = {
             title: '未来宝贝', // 分享标题
-            link: window.location.href, // 分享链接
-
+            link: `${window.location.origin}/futureBaby/index.html?#/home`, // 分享链接
+            imgurls: require('../../assets/img/logoShare.jpg')
           }
           wxShare(this.config, obj, (msg) => {
             console.log(msg)

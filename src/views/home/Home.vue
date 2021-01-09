@@ -88,15 +88,13 @@
       this.initSwiper();
       this.getNotice();
       this.getOfficial();
-      this.getAppConfig()
+      this.getAppConfig();
     },
     methods: {
-      // appID=wxd77b65042c011f00
-      // appSecret=4e2a63c950905e2268134c7c995cf45e
       //获取定位
       getAppConfig() {
         this.$http('/userinfo/getConfig', {
-          url: window.location.href
+          url: window.location.href.split('#')[0]
         }).then(res => {
           console.log(res)
           if (res.code == 200) {
@@ -105,9 +103,8 @@
               setStore('longitude',result.longitude);
               setStore('latitude',result.latitude)
               this.getLocationCity(result.longitude,result.latitude);
-              
             }).catch(err => {
-              this.$toast.fail('获取地理位置失败')
+              // this.$toast.fail('获取地理位置失败')
               
             })
           }

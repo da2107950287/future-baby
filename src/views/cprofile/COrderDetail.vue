@@ -14,6 +14,8 @@
             <span v-if="info.status==1">进行中</span>
             <span v-else-if="info.status==2">即将过期</span>
             <span v-else-if="info.status==3">已失效</span>
+            <span v-else-if="info.status==4">未付款</span>
+
           </div>
         </div>
         <div class="center">
@@ -55,7 +57,8 @@
       </div>
       <OrderInfo :orderInfo="orderInfo"></OrderInfo>
       <div class="btns">
-        <div @click="show=true">学习打卡</div>
+        <div v-if="info.status==4"  @click="toPay">去付款</div>
+        <div v-else  @click="show=true">学习打卡</div>
         <div @click="$router.go(-1)">返回上一页</div>
       </div>
     </div>
@@ -98,6 +101,9 @@
       this.showOrderlist()
     },
     methods: {
+      toPay(){
+        window.location.href=this.info.payCode
+      },
       showOrderlist() {
         this.$http('/orderlist/showOrderlist', {
           olId: this.$route.query.olId,

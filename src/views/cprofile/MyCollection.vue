@@ -13,15 +13,20 @@
     </div>
     <div class="content">
       <van-pull-refresh v-model="isLoading" @refresh="onRefresh">
-        <van-list v-model="loading" :finished="finished" finished-text="暂无更多数据">
-          <DynamicItem v-for="(item,index) in list" :item="item" :key="item.dyId"
-            @updateClickState="list.splice(index,1)" @updateCollState="list.splice(index,1)">
+        <van-list v-model="loading" :finished="finished" finished-text="">
+          <DynamicItem v-for="(item,index) in list" :item="item" :key="item.dyId" @updateClickState="updateClickState"
+            @updateCollState="updateCollState">
             <img slot="headportrait" @click="$router.push({path:'/networkDetail',query:{olsId:item.olsId}})"
               class="head-portrait" :src="item.headportrait" alt="">
-            <div slot="bname" class="bname">{{item.nickname}}</div>
+            <div slot="bname" class="bname" @click="$router.push({path:'/networkDetail',query:{olsId:item.olsId}})">{{item.nickname}}</div>
           </DynamicItem>
         </van-list>
       </van-pull-refresh>
+      <div v-if="isEmpty==1" style="position: fixed;top: 50%;left: 50%;transform: translate(-50%,-50%);">
+        <img src="../../assets/img/empty.png" alt="">
+      </div>
+      <div v-if="isEmpty==2" style="text-align: center;color: #aaa;font-size: 14px;padding: 10px">暂无更多数据</div>
+
     </div>
   </div>
   </div>
@@ -39,6 +44,7 @@
         isLoading: false,// 是否处于加载中状态
         loading: false,// 是否处于加载状态
         finished: false,// 是否已加载完成
+        isEmpty: 0,
         list: [],//动态列表
         clock: 0,
       }
@@ -47,8 +53,17 @@
       this.getDynamic()
     },
     methods: {
+      updateClickState(index) {
+       this.PageNumber=1;
+       this.getDynamic()
+      },
+      updateCollState(index) {
+        this.PageNumber=1;
+       this.getDynamic()
+      },
       //切换菜单栏
       handleClick(index) {
+        this.isEmpty = 0;
         this.active = index;
         this.PageNumber = 1;
         this.list = [];
@@ -73,7 +88,11 @@
             this.list = res.data;
             if (res.data.length == this.PageSize) {
               window.addEventListener("scroll", this.handleScroll);
+            } else if (res.data.length == 0) {
+              this.isEmpty = 1;
+              this.finished = true;
             } else {
+              this.isEmpty = 2;
               this.finished = true;
             }
 
@@ -109,6 +128,7 @@
                 this.loading = false;
                 this.list = [...this.list, ...res.data];
                 if (this.PageSize > res.data.length) {
+                  this.isEmpty = 2;
                   this.finished = true;
                   window.removeEventListener("scroll", this.handleScroll)
                 }
@@ -120,6 +140,7 @@
       //下拉刷新
       onRefresh() {
         this.PageNumber = 1;
+        this.isEmpty=0;
         this.finished = false;
         this.isLoading = false;
         this.list = [];
@@ -143,7 +164,7 @@
 
     .navbar-box {
       height: 44px;
-   
+
     }
   }
 
@@ -159,7 +180,7 @@
     top: 0;
     align-items: center;
     background: $fc;
-z-index: 1;
+    z-index: 1;
 
     .nav-left {
       width: 40px;

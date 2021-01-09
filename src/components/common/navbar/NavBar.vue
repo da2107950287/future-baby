@@ -2,7 +2,7 @@
   <div class="height44">
     <div id="nav-bar">
       <div class="nav-left">
-        <slot name="left"><span class="iconfont icon-fanhui2 icon" @click="$router.go(-1)"></span></slot>
+        <slot name="left"><span class="iconfont icon-fanhui2 icon" @click="goback"></span></slot>
       </div>
       <div class="nav-center">
         <slot name="center">标题</slot>
@@ -16,7 +16,13 @@
 
 <script>
   export default {
-    name: "NavBar"
+    name: "NavBar",
+    methods:{
+      goback(){
+    
+        window.history.length > 1 ? this.$router.go(-1) : this.$router.push('/home')
+      }
+    }
   }
 </script>
 
@@ -31,13 +37,15 @@
 
     top: 0;
     display: flex;
-z-index: 1;
+    z-index: 1;
     height: 44px;
     width: 100%;
     line-height: 44px;
     text-align: center;
     color: #333333;
     background-color: #fff;
+    display: flex;
+    align-items: center;
   }
 
   .nav-left {

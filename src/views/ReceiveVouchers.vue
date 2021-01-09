@@ -5,18 +5,19 @@
     </NavBar>
     <div class="content">
       <div class="item">
-        <div class="card-name">月度课程名称：{{info.courseName}}</div>
+        <div class="card-name">月度课程名称：{{courseName}}</div>
         <div class="card-right">
           <div class="price">
             <span>抵用券金额</span>
             <span>￥</span>
-            <span>{{info.price}}</span>
+            <span>{{price}}</span>
           </div>
-          <div class="time">有效时间 {{info.createTime |formatTime}}-{{info.endTime|formatTime}}</div>
+          <div class="time">有效时间 {{createTime | formatTime}}-{{endTime | formatTime}}</div>
         </div>
       </div>
-      <!-- <van-field class="mobile" v-model="mobile" placeholder="电话（必填）" :error-message="errorMobile" @blur="VerifyCellMobile" /> -->
-      <van-button @click="submit" class="btn" round block color="#FC4B4C" type="danger">领取抵用券</van-button>
+      <van-button v-if="uid==''" @click="submit" class="btn" round block color="#FC4B4C" type="danger">领取抵用券
+      </van-button>
+      <van-button v-else class="btn" round block  color="#FC4B4C"  type="danger">已被领取</van-button>
     </div>
   </div>
   </div>
@@ -27,8 +28,14 @@
   export default {
     data() {
       return {
-        info: {}
+        courseName: '',
+        price: '',
+        createTime: '',
+        endTime: '',
+        uid:'',
+        dtnId:''
       }
+
     },
     filters: {
       formatTime(val) {
@@ -36,15 +43,20 @@
       }
     },
     created() {
-      this.showDeduction()
+      this.dtnId=this.$route.query.dtnId
+      this.showDeduction();
     },
     methods: {
       showDeduction() {
         this.$http('/orderlist/showDeduction', {
-          dtnId: this.$route.query.dtnId
+          dtnId:this.dtnId,
         }).then(res => {
           if (res.code == 200) {
-            this.info = res.data;
+            this.courseName = res.data.courseName;
+            this.price = res.data.price;
+            this.createTime = res.data.createTime;
+            this.endTime = res.data.endTime;
+            this.uid=res.data.uid;
           }
         })
       },
@@ -53,9 +65,10 @@
           dtnId: this.$route.query.dtnId
         }).then(res => {
           if (res.code == 200) {
+            this.showDeduction()
             this.$toast.success(res.msg)
-          } else {
-            thsi.$toast.fail(res.msg)
+          } else if(res.code==500) {
+            this.$toast.fail(res.msg)
           }
         })
       },

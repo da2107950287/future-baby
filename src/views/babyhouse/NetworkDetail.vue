@@ -26,13 +26,13 @@
         <Card :card="info.commodityEntity" :olsId="olsId"></Card>
         <div class="intro">
           <div class="title">园区介绍</div>
-          <div>{{info.intro}}</div>
+          <div class="intro-info">{{info.intro}}</div>
         </div>
         <div class="intro">
           <div class="title">园区动态</div>
-          <div v-if="info.vipState!=0" class="not-vip"
+          <div v-if="info.vipState==0" class="not-vip"
             @click="$router.push({path:'/orderPayment',query:{olsId:info.olsId}})">
-            <img src="../../assets/img/icon_suo.png" alt="">
+            <img src="~assets/img/icon_suo.png" alt="">
             <div>点击开通VIP后查看园区动态 >></div>
           </div>
           <div v-else>
@@ -82,7 +82,7 @@
               <img src="~assets/img/icon_friend.png" alt="">
               <div>发送给朋友</div>
             </div>
-            <a class="btn" @click="imgClick">
+            <a class="btn">
               <img src="~assets/img/icon_photo.png" alt="">
               <div>长按图片保存到相册</div>
             </a>
@@ -91,7 +91,7 @@
       </div>
     </van-overlay>
     <van-overlay :show="isShow" @click="close">
-      <div class="wrapper" >
+      <div class="wrapper">
         <div class="share">
           <img class="arrow" src="~assets/img/arrow.png" alt="">
 
@@ -119,14 +119,19 @@
   export default {
     data() {
       return {
-        isShow:false,
+        isShow: false,
         show: false,
         qrcode: null, //二维码实例
         canCanvas: 0, //是否可以开始进行canvas转换   2-可以
         shareImg: "",//分享图片的src
         imgload: false,//图片是否有加载完成
         olsId: '',//网点id
-        info: {},//网点详情
+        info: {
+          province: '',
+          city: '',
+          area: '',
+          address: ''
+        },//网点详情
         PageNumber: 1,//当前页数
         PageSize: 10,//每页显示多少条
         list: [],//动态列表
@@ -135,7 +140,7 @@
     },
     computed: {
       address() {
-        return this.info.province + this.info.city + this.info.area + this.info.address;
+        return `${this.info.province}${this.info.city}${this.info.area}${this.info.address}` || '';
       }
     },
     watch: {
@@ -161,20 +166,18 @@
     mounted() {
       this.olsId = this.$route.query.olsId;
       this.showOutlets();
-      this.getDynamic();
+      // this.getDynamic();
       this.getAppConfig()
     },
     methods: {
-      close(){
-        console.log(this.isShow,this.show)
+      close() {
         this.isShow = false;
-        this.show=false;
+        this.show = false;
       },
       getAppConfig() {
         this.$http('/userinfo/getConfig', {
-          url: window.location.href
+          url: window.location.href.split('#')[0]
         }).then(res => {
-          console.log(res)
           if (res.code == 200) {
             this.config = res.data;
             let obj = {
@@ -190,12 +193,7 @@
           }
         })
       },
-      imgClick() {
-        var alink = document.createElement('a')
-        alink.href = this.shareImg
-        alink.download = '分享网点' // 图片名
-        alink.click()
-      },
+
       //查询网点信息
       showOutlets() {
         this.$http('/outlets/showOutlets', {
@@ -203,6 +201,9 @@
         }).then(res => {
           if (res.code == 200) {
             this.info = res.data;
+            if (this.info.vipState == 1) {
+              this.getDynamic()
+            }
             this.getBase64Image(this.info.image, this.$refs.tuBox).then(res => {
               this.logo = res;
               this.$nextTick(() => {
@@ -299,7 +300,7 @@
         }
         this.list[index].collState = this.list[index].collState ^ 1;
       },
-     
+
       initQrcode() {
         //生成二维码
         this.qrcode = new QRCode('qrcode', {
@@ -327,15 +328,19 @@
     },
     beforeDestroy() {
       window.removeEventListener("scroll", this.handleScroll)
+
+    },
+    destroyed() {
       this.$http('/userinfo/getConfig', {
-        url: window.location.href
+        url: window.location.href.split('#')[0]
       }).then(res => {
         console.log(res)
         if (res.code == 200) {
           this.config = res.data;
           let obj = {
             title: "未来宝贝", // 分享标题
-            link: window.location.href, // 分享链接
+            link: `${window.location.origin}/futureBaby/index.html?#/home`, // 分享链接
+            imgurls: require('../../assets/img/logoShare.jpg')
           }
           wxShare(this.config, obj, (msg) => {
             console.log(msg)
@@ -354,6 +359,7 @@
 </script>
 <style lang="scss" scoped>
   @import '~assets/css/mixin.scss';
+
   .share {
     width: 100%;
     padding: 0 1rem;
@@ -377,6 +383,7 @@
       width: 60vw;
     }
   }
+
   .content {
 
 
@@ -409,7 +416,6 @@
           @include sc(.75rem, #333);
           font-family: PingFangSC-Medium, PingFang SC;
           font-weight: 500;
-
         }
 
         .right {
@@ -426,16 +432,14 @@
           .icon {
             color: #aaa;
             margin-left: .45rem;
-
           }
         }
-
-
       }
-
-
     }
 
+    .intro-info {
+      @include sc(.75rem, #333)
+    }
 
 
     .blank {

@@ -20,9 +20,11 @@ export function http(url, data = {}, method = 'post') {
     // 对 data 进行任意转换处理,将对象序列化成URL的形式，以&进行拼接
     return qs.stringify(data)
   }
+
+  let url1 = process.env.NODE_ENV == "development" ? '/api' : 'http://112.74.163.209';
   return new Promise((resolve, reject) => {
     const instance = originAxios.create({
-      baseURL: '/api'
+      // baseURL: url1
     });
     // 配置请求和响应拦截
     instance.interceptors.request.use(config => {
@@ -36,8 +38,10 @@ export function http(url, data = {}, method = 'post') {
     instance.interceptors.response.use(response => {
 
       if (response.data.code == 501) {
-        // let url = encodeURIComponent('http://dragonworld.top/futureBaby/index.html#/auth');
-        // window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxd77b65042c011f00&redirect_uri=${url}&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect`;
+    
+          let url = encodeURIComponent('http://dragonworld.top/futureBaby/index.html#/auth');
+          window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxd77b65042c011f00&redirect_uri=${url}&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect`;
+       
       }
       return response.data;
     }, err => {
@@ -71,11 +75,13 @@ export function uploadPost(url, data) {
       'Content-Type': 'multipart/form-data'
     }
   }
+  let url1 = process.env.NODE_ENV == "development" ? '/api' : 'http://112.74.163.209';
+
   return new Promise((resolve, reject) => {
     // 1.创建axios的实例
     const instance = originAxios.create({
       method: 'post',
-      baseURL: '/api'
+      // baseURL: url1
 
     });
     // 配置请求和响应拦截

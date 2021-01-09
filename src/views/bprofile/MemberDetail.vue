@@ -33,7 +33,8 @@
 					<div>时间</div>
 					<div>状态</div>
 				</div>
-				<div class="order-item" v-for="item in info.orderlist" :key="item.olId">
+				<div v-if="info.orderlist.length==0" style="text-align: center;color: #aaa;font-size: 12px;padding: 10px">暂无数据</div>
+				<div v-else class="order-item" v-for="item in info.orderlist" :key="item.olId">
 					<div>1</div>
 					<div>{{item.olId}}</div>
 					<div>¥{{item.orderPrice}}</div>
@@ -44,6 +45,7 @@
 						<span v-else-if="item.status==3">即将失效</span>
 					</div>
 				</div>
+				
 			</div>
 		</div>
 	</div>
@@ -58,10 +60,7 @@
 		data() {
 			return {
 				show: false,
-				info: {
-
-				},
-
+				info: {},
 			}
 		},
 		filters: {
@@ -419,6 +418,12 @@
 			color: #333333;
 			line-height: 20px;
 			margin-bottom: 15px;
+			
+		}
+		.order-info{
+			background-color: #fff;
+			border-radius: 5px;
+			padding: 5px 0;
 		}
 
 		.order-info-item {

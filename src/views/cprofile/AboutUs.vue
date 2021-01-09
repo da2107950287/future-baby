@@ -1,9 +1,10 @@
 <template>
   <div class="account-detail">
     <NavBar>
-      <div slot="center">未来宝贝</div>
+      <div slot="center">关于我们</div>
     </NavBar>
     <div v-html="content" class="content"></div>
+    <div style="height: 44px;"></div>
     <div class="consult" @click="call">电话咨询</div>
   </div>
   </div>
@@ -58,8 +59,7 @@
 
   .content {
     padding: 0 1rem;
-
-
+    min-height: calc(100% - 44px);
   }
 
   .consult {

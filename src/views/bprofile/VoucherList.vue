@@ -6,27 +6,27 @@
     <div class="content">
 
       <van-pull-refresh v-model="isLoading" @refresh="onRefresh">
-        <van-list v-model="loading" :finished="finished" finished-text="暂无更多数据">
-
+        <van-list v-model="loading" :finished="finished" finished-text="">
           <div class="item" v-for="item in list" :key="item.dtnId">
             <div class="color3">月度课程名称：{{item.courseName}}</div>
             <div class="colora font65">生成时间：{{item.createTime | formatTime1}}</div>
             <div class="color3">抵用券金额 <span class="red">{{item.price}}</span></div>
             <div class="color3">有效时间 <span class="colora">{{item.createTime | formatTime}}-{{item.endTime |
                 formatTime}}</span></div>
-            <div :class="item.uid==''?'active':''" class="label">
+            <div :class="item.uid!=''?'active':''" class="label">
               <div v-if="item.uid==''">未领取</div>
               <div v-else>已领取</div>
-              <div :class="item.uid==''?'active':''" class="arrow"></div>
+              <div :class="item.uid!=''?'active1':''" class="arrow"></div>
             </div>
           </div>
         </van-list>
       </van-pull-refresh>
-
+      <div v-if="isEmpty==1" style="position: fixed;top: 50%;left: 50%;transform: translate(-50%,-50%);">
+        <img src="~assets/img/empty.png" alt="">
+      </div>
+      <div v-if="isEmpty==2" style="text-align: center;color: #aaa;font-size: 14px;padding: 10px">暂无更多数据</div>
     </div>
-    <div class="fixed">
-      创建优惠券
-    </div>
+    <div class="fixed" @click="$router.push({path:'/voucher',query:{olsId:$route.query.olsId}})">创建优惠券</div>
   </div>
 </template>
 <script>
@@ -35,6 +35,7 @@
   export default {
     data() {
       return {
+        isEmpty: 0,
         PageNumber: 1,//当前页数
         PageSize: 10,//每页显示多少条
         clock: 0,//1 可以请求数据
@@ -70,6 +71,11 @@
           if (this.PageSize == res.data.length) {
             window.addEventListener("scroll", this.handleScroll)
           } else {
+            if (res.data.length == 0) {
+              this.isEmpty = 1;
+            } else {
+              this.isEmpty = 2
+            }
             this.finished = true;
           }
         })
@@ -99,6 +105,7 @@
                 this.loading = false;
                 this.list = [...this.list, ...res.data];
                 if (this.PageSize > res.data.length) {
+                  this.isEmpty = 2;
                   this.finished = true;
                   window.removeEventListener("scroll", this.handleScroll)
                 }
@@ -139,7 +146,7 @@
     background-color: $fc;
     text-align: center;
 
-    border-top:1px solid #ececec;
+    border-top: 1px solid #ececec;
 
   }
 
@@ -148,7 +155,7 @@
     background: #F7F7F7;
     padding: .5rem 1rem;
     margin-bottom: 44px;
-
+    min-height: calc(100% - 44px);
 
     .item {
       position: relative;
@@ -216,12 +223,17 @@
 
         }
 
+        .active1 {
+          border-color: #FC4B4C;
+
+          border-bottom-color: transparent;
+
+        }
       }
 
-      .active {
-        border-color: #FC4B4C;
-        border-bottom-color: transparent;
 
+      .active {
+        background-color: #FC4B4C;
       }
     }
 

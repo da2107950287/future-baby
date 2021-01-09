@@ -5,7 +5,7 @@
     </NavBar>
     <div class="content">
       <div class="wlbb">未来宝贝</div>
-      <div class="tel">
+      <div class="tel" @click="show=true">
         <span class="iconfont icon-dianhua icon"></span>
         <span>{{tel}}</span>
       </div>
@@ -39,6 +39,17 @@
       </van-action-sheet>
       <van-button class="btn" round color="#FC4B4C" @click="submit" block>发送</van-button>
     </div>
+    <van-overlay :show="show" @click="show=false">
+			<div class="wrapper">
+				<div class="block">
+					<img src="~assets/img/popup.png" alt="">
+					<div class="title">联系总部客服</div>
+					<div class="tel">电话：{{tel}}</div>
+					<div class="confirm-btn" @click="call">确定</div>
+					<div class="cancle-btn">取消</div>
+				</div>
+			</div>
+		</van-overlay>
   </div>
   </div>
 </template>
@@ -49,6 +60,7 @@
   export default {
     data() {
       return {
+        show:false,
         tel: "",//平台电话
         query: {
           fullname: "",//姓名
@@ -70,10 +82,12 @@
     },
     created() {
       this.getConfig();
-     
       this.provinceList = chineseLetter(this.objToArr('86'), 'value');
     },
     methods: {
+      call(){
+        window.location.href=`tel://${this.tel}`;
+      },
       objToArr(provinceId) {
         let arr = [];
         for (const key in region[provinceId]) {
@@ -106,7 +120,8 @@
           this.query
         ).then(res => {
           if (res.code == 200) {
-            this.$toast.success(res.msg)
+            this.$toast.success(res.msg);
+            this.$router.go(-1)
           } else if (code == 500) {
             this.$toast.fail(res.msg);
           }
@@ -259,4 +274,74 @@
       }
     }
   }
+  .wrapper {
+		@include fj(center);
+		align-items: center;
+		height: 100%;
+
+		.block {
+			position: relative;
+			width: 12.5rem;
+			padding: 1rem;
+			border-radius: 1rem;
+			background: $fc;
+
+			img {
+				position: absolute;
+				top: 0;
+				left: 50%;
+				transform: translate(-50%, -50%);
+
+				width: 3rem;
+				height: 3rem;
+				border-radius: 50%;
+			
+				border: 0.1rem solid #FFFFFF;
+			}
+
+			.title {
+				text-align: center;
+				font-size: 0.8rem;
+				font-family: PingFangSC-Medium, PingFang SC;
+				font-weight: bold;
+				color: #333333;
+				line-height: 1.1rem;
+				margin-top: 1.25rem;
+			}
+
+			.tel {
+				margin-top: .75rem;
+				font-size: 0.7rem;
+				font-family: PingFangSC-Regular, PingFang SC;
+				font-weight: 400;
+				color: #AAAAAA;
+				line-height: 1.1rem;
+				text-align: center;
+				margin-bottom: 10px;
+			}
+
+			.confirm-btn {
+				width: 100%;
+				height: 40px;
+				background: #FC4B4C;
+				border-radius: 4px;
+				font-size: 15px;
+				font-weight: bold;
+				color: #FFFFFF;
+				line-height: 40px;
+				text-align: center;
+			}
+
+			.cancle-btn {
+				width: 100%;
+				height: 40px;
+				border-radius: 4px;
+				font-size: 15px;
+				font-weight: 400;
+				color: #333333;
+				line-height: 40px;
+				text-align: center;
+			}
+		}
+	}
 </style>

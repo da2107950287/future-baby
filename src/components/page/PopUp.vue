@@ -1,5 +1,5 @@
 <template>
-  <van-overlay :show="show">
+  <van-overlay :show="show" >
     <div class="wrapper">
       <div class="block">
         <img src="../../assets/img/popup.png" alt="">
@@ -10,9 +10,10 @@
           <slot name="dec"></slot>
         </div>
         <div>
-          <div class="btn red">
+          <slot name="btn"></slot>
+          <!-- <div class="btn red">
             <slot name="redBtn"></slot>
-          </div>
+          </div> -->
           <!-- <div class="btn white">
             <slot name="whiteBtn"></slot>
           </div> -->
@@ -34,7 +35,9 @@
     align-items: center;
     height: 100%;
 
-    .block {
+    
+  }
+  .block {
       position: relative;
       width: 12.5rem;
       padding: 1rem;
@@ -43,14 +46,15 @@
       background: $fc;
       font-family: PingFangSC-Regular, PingFang SC;
 
-      img {
+     
+    }
+    img {
         @include wh(3rem, 3rem);
         position: absolute;
         top: 0;
         left: 50%;
         transform: translate(-50%, -50%);
         border-radius: 50%;
-        background: #000;
         border: 0.1rem solid #FFFFFF;
       }
 
@@ -58,7 +62,7 @@
         font-size: 0.8rem;
         font-weight: 500;
         color: #333333;
-        margin-top: 2.7rem;
+        margin-top: 2rem;
       }
 
       .dec {
@@ -86,6 +90,4 @@
       .white {
         color: #333;
       }
-    }
-  }
 </style>

@@ -9,28 +9,36 @@
           :error-message="verification.nickname" @blur="VerifyCellNickname" required />
         <van-field v-model="query.account" type="tel" name="手机" label="手机" placeholder="请填写手机号码"
           :error-message="verification.account" @blur="VerifyCellMobile" required />
-        <van-field right-icon="arrow" readonly clickable name="calendar" :value="query.birthday" label="生日"
-          placeholder="请选择您的生日" @click="showCalendar = true" :error-message="verification.birthday"
-          @input="VerifyCellBirthday" required />
-        <van-calendar :minDate="new Date(1970,1,1)" v-model="showCalendar" @confirm="onConfirm" />
+        <!-- <van-field readonly is-link name="calendar" :value="query.birthday" label="生日" placeholder="请选择您的生日"
+          @click="showCalendar = true" :error-message="verification.birthday" @input="VerifyCellBirthday" required />
+        <van-calendar :minDate="new Date(1970,0,1)" v-model="showCalendar" @confirm="onConfirm" />
+        <van-popup v-model="showCalendar" position="bottom">
+          <van-datetime-picker v-model="currentDate" type="date" :minDate="new Date(1970,0,1)" @confirm="onConfirm"
+            @cancel="showCalendar = false" />
+        </van-popup> -->
+
+        <van-field readonly is-link required name="datetimePicker" :value="query.birthday" label="生日" placeholder="请选择您的生日"
+          @click="showCalendar = true" />
+        <van-popup v-model="showCalendar" position="bottom">
+          <van-datetime-picker v-model="currentDate" type="date" :minDate="minDate" @confirm="onConfirm" @cancel="showCalendar = false" />
+        </van-popup>
+
         <van-field name="radio" label="性别" required>
           <template #input>
-            <van-radio-group v-model="query.sex" direction="horizontal" :error-message="verification.sex"
-               required>
+            <van-radio-group v-model="query.sex" direction="horizontal" :error-message="verification.sex" required>
               <van-radio checked-color="#FC4B4C" name="男">男</van-radio>
               <van-radio checked-color="#FC4B4C" name="女">女</van-radio>
             </van-radio-group>
           </template>
         </van-field>
-        <van-field right-icon="arrow" readonly clickable name="picker" :value="query.city" label="城市"
-          placeholder="请选择城市" @click="showPicker = true" :error-message="verification.city" @input="VerifyCellCity"
-          required />
+        <van-field readonly is-link name="picker" :value="address" label="城市" placeholder="请选择城市"
+          @click="showPicker = true" :error-message="verification.city" @input="VerifyCellCity" required />
         <van-action-sheet v-model="showPicker" title="请选择您所在城市">
           <div class="city-content">
             <div class="title">选择省份/城市</div>
             <div class="cities">
               <div v-if="!provinceId">
-                <div v-for="item in provinceList" @click="getCityList(item.id)">
+                <div v-for="item in provinceList" @click="getCityList(item.id,item.value)">
                   <span>{{item.letter}}</span>{{item.value}}
                 </div>
               </div>
@@ -58,6 +66,7 @@
   export default {
     data() {
       return {
+        minDate: new Date(1970,0,1),
         showCalendar: false,//是否显示日历
         showPicker: false,//是否显示城市列表
         provinceId: "",//省份ID
@@ -79,6 +88,12 @@
           address: "",//地址
           birthday: "",//生日
         },//错误提示
+        currentDate: new Date(),
+      }
+    },
+    computed: {
+      address() {
+        return `${this.query.province}${this.query.city}` || '';
       }
     },
     created() {
@@ -102,6 +117,7 @@
               headportrait: res.data.headportrait,//	头像
               sex: res.data.sex,//性别 男女
               account: res.data.account,
+              province: res.data.province,
               city: res.data.city,	//城市
               address: res.data.address,//地址
               birthday: res.data.birthday,//生日
@@ -120,8 +136,10 @@
         return arr;
       },
       //获取城市列表
-      getCityList(id) {
-        this.provinceId = id
+      getCityList(id, value) {
+        console.log(value)
+        this.provinceId = id;
+        this.query.province = value;
         this.cityList = chineseLetter(this.objToArr(id), 'value');
       },
       //保存
@@ -135,9 +153,9 @@
         }
         if (!this.VerifyCellCity()) return false;
         if (!this.VerifyCellAddress()) return false;
-        
-       
-      
+
+
+
         this.$http('/userinfo/updateUserinfo', this.query).then(res => {
           if (res.code == 200) {
             this.$toast.success(res.msg)
@@ -157,7 +175,7 @@
           return true;
         }
       },
-     //验证手机号
+      //验证手机号
       VerifyCellMobile() {
         if (this.query.account == '') {
           this.verification.account = '手机号不能为空';

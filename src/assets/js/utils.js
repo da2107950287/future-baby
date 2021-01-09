@@ -42,7 +42,7 @@ function isEmptyObject(obj) {
 }
 //格式化日期
 export function formatDate(date) {
-  return `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2,0)}-${date.getDate().toString().padStart(2,0)}`;
+  return `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, 0)}-${date.getDate().toString().padStart(2, 0)}`;
 }
 export function setStore(key, value) {
   window.localStorage.setItem(key, value);
@@ -96,7 +96,7 @@ export function chineseLetter(arr, dataLeven) {
     }
   }
 }
-export function getRequest(){ 
+export function getRequest() {
   var url = window.location.search; //获取url中"?"符后的字串
   var theRequest = new Object();
   if (url.indexOf("?") != -1) {
@@ -107,4 +107,13 @@ export function getRequest(){
     }
   }
   return theRequest;
+}
+export function debounce(fn, delay) {
+  var timer = null;
+  return function () {
+    if (timer) {
+      clearTimeout(timer);
+    }
+    timer = setTimeout(fn, delay);
+  }
 }

@@ -7,6 +7,7 @@
 					<span v-if="item.status==1">进行中</span>
 					<span v-else-if="item.status==2">即将过期</span>
 					<span v-else-if="item.status==3">即将失效</span>
+					<span v-else-if="item.status==4">未付款</span>
 				</div>
 			</div>
 			<div class="order-item-info">
@@ -63,7 +64,7 @@
 		}
 	}
 </script>
-<style lang="scss" scopde>
+<style lang="scss" scoped>
 	@import '~assets/css/mixin.scss';
 
 	.order {

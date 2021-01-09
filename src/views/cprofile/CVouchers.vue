@@ -11,7 +11,7 @@
           <div class="content">
             <div class="total">抵用券：{{totalNum}}张</div>
             <van-pull-refresh v-model="isLoading" @refresh="onRefresh">
-              <van-list v-model="loading" :finished="finished" finished-text="暂无更多数据">
+              <van-list v-model="loading" :finished="finished" finished-text="">
                 <div class="item" v-for="item in list" :key="item.dtnId">
                   <div class="clock">
                     <div class="top">
@@ -26,12 +26,18 @@
                     </div>
                     <div class="bottom">
                       <div class="bottom-left">有效期 {{item.endTime}}</div>
-                      <div v-if="item.state==1" class="bottom-right">去使用</div>
+                      <div v-if="item.state==1" class="bottom-right"
+                        @click="$router.push({path:'/networkDetail',query:{olsId:item.olsId}})">去使用</div>
                     </div>
                   </div>
                 </div>
               </van-list>
             </van-pull-refresh>
+            <div v-if="isEmpty==1" style="position: fixed;top: 50%;left: 50%;transform: translate(-50%,-50%);">
+              <img src="../../assets/img/empty.png" alt="">
+            </div>
+            <div v-if="isEmpty==2" style="text-align: center;color: #aaa;font-size: 14px;padding: 10px">暂无更多数据</div>
+
           </div>
         </van-tab>
       </van-tabs>
@@ -47,11 +53,13 @@
       return {
         activeName: "",
         clock: 0,
+        isEmpty: 0,
         PageNumber: 1,//当前页数
         PageSize: 10,//每页显示多少条
         isLoading: false,// 是否处于加载中状态
         loading: false,// 是否处于加载状态
         finished: false,// 是否已加载完成
+        isEmpt: 0,
         list: [],
         tabs: [
           { title: "全部", name: "" },
@@ -67,7 +75,7 @@
     },
     watch: {
       activeName() {
-        console.log(99999)
+        this.isEmpty = 0;
         this.finished = false;
         this.PageNumber = 1;
         this.list = [];
@@ -93,6 +101,11 @@
             if (this.PageSize == res.data.length) {
               window.addEventListener("scroll", this.handleScroll)
             } else {
+              if (res.data.length == 0) {
+                this.isEmpty = 1;
+              } else {
+                this.isEmpty = 2;
+              }
               this.finished = true;
             }
           }
@@ -124,6 +137,7 @@
                 this.loading = false;
                 this.list = [...this.list, ...res.data];
                 if (this.PageSize > res.data.length) {
+                  this.isEmpty = 2;
                   this.finished = true;
                   window.removeEventListener("scroll", this.handleScroll)
                 }
@@ -135,6 +149,7 @@
 
       //下拉刷新
       onRefresh() {
+        this.isEmpty = 0;
         this.PageNumber = 1;
         this.finished = false;
         this.isLoading = false;
@@ -152,8 +167,6 @@
 
   .c-vouchers {
     @include wh(100%, 100%);
-
-
   }
 
   .vouchers-list {

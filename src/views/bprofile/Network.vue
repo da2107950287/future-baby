@@ -20,17 +20,30 @@
 					<div class="title" style="padding-left: 20px;">简介<span class="modify">（可修改）</span></div>
 				</div>
 				<div class="padding20">
-					<van-field class="textarea" v-model="query.intro" type="textarea" placeholder="请输入网点联系电话"
+					<van-field class="textarea" v-model="query.intro" type="textarea" autosize placeholder="请输入网点联系电话"
 						:error-message="verification.intro" @blur="VerifyCellIntro" />
 				</div>
 				<div class="pic">
 					<div class="title"><span class="require">*</span>形象图<span class="modify">（可修改）</span></div>
 					<div class="mark">只显示1张，图片建议尺寸500*500，大小不超过2M</div>
-					<van-uploader class="padding20" v-model="fileList" @delete="query.image=''" :after-read="afterRead"
+					<!-- <van-uploader class="padding20" v-model="fileList" @delete="query.image=''" :after-read="afterRead"
 						max-count=1>
 						<template #preview-cover="{ file }">
 							<div class="preview-cover van-ellipsis">更改形象图</div>
 						</template>
+					</van-uploader> -->
+					<van-uploader class="padding20" preview-size="160px" :after-read="afterRead">
+						<div v-if="!query.image" class="image">
+							<div class="iconfont icon-jia icon"></div>
+							<span>上传形象图</span>
+						
+						</div>
+						<div v-else>
+							<img  :src="query.image" alt="" class="image">
+							<div class="preview-cover image"  >更改形象图</div>
+
+
+						</div>
 					</van-uploader>
 					<div class="error-image padding20">{{verification.image}}</div>
 				</div>
@@ -45,7 +58,7 @@
 	import { isPhone, formatDate, chineseLetter, getStore } from "assets/js/utils.js";
 	import region from "assets/js/region.js";
 	import { uploadPost } from 'assets/js/http.js'
-  import { getLocation } from "assets/js/wx.js";
+	import { getLocation } from "assets/js/wx.js";
 
 	export default {
 		data() {
@@ -160,7 +173,7 @@
 			//获取定位
 			getAppConfig() {
 				this.$http('/userinfo/getConfig', {
-					url: window.location.href
+					url: window.location.href.split('#')[0]
 				}).then(res => {
 					console.log(res)
 					if (res.code == 200) {
@@ -168,7 +181,7 @@
 						getLocation(this.config).then(result => {
 							this.query.latitude = result.latitude;
 							this.query.longitude = result.longitude;
-					
+
 						}).catch(err => {
 							console.log(err)
 						})
@@ -247,7 +260,29 @@
 </script>
 <style lang="scss" scoped>
 	@import '~assets/css/mixin.scss';
+	.image {
+      width: 8rem;
+      height: 8rem;
+      background: #EFEFEF;
+      border-radius: 5px;
+      position: relative;
+      margin-top: 10px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
 
+      .icon {
+        @include sc(2rem, #aaa);
+
+      }
+
+      span {
+
+        @include sc(.6rem, #aaa)
+      }
+    }
 	.c-order {
 		@include wh(100%, 100%);
 
@@ -312,14 +347,14 @@
 	}
 
 	.padding20 {
-		padding: 0 20px;
+		padding: 0 20px 5px;
 	}
 
 	.mark {
 		font-size: 12px;
 		color: #AAAAAA;
 		padding-left: 20px;
-		margin-bottom: .75rem;
+	
 	}
 
 	.preview-cover {
@@ -327,8 +362,7 @@
 		bottom: 0;
 		box-sizing: border-box;
 		border-radius: 5px;
-		width: 100%;
-		height: 100%;
+
 		line-height: 80px;
 		padding: 4px;
 		color: #fff;

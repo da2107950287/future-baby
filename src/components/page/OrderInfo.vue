@@ -20,7 +20,7 @@
       <span class="label">生成时间</span>
       <span>{{orderInfo.orderTime | formatTime}}</span>
     </div>
-    <div>
+    <div  v-if="orderInfo.status!=4">
       <span class="label">到期时间</span>
       <span>{{orderInfo.endTime | formatTime}}</span>
     </div>
@@ -43,7 +43,7 @@
     }
   }
 </script>
-<style lang="scss" scopde>
+<style lang="scss" scoped>
   @import '~assets/css/mixin.scss';
 
   .order-info {

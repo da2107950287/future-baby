@@ -63,7 +63,7 @@
 	
 	}
 </script>
-<style lang="scss" scopde>
+<style lang="scss" scoped>
 	@import '~assets/css/mixin.scss';
 
 	.order {
@@ -164,18 +164,22 @@
 
 	.top-info-head {
 		width: 44px;
-		height: 35px;
-		border-radius: 50%;
+		height: 60px;
+
 		overflow: hidden;
-		margin-top: 15px;
+		margin-top: 10px;
 	}
 
 	.top-info-head>img {
 		width: 100%;
-		height: 100%;
+		height: 35px;
+		border-radius: 50%;
 	}
 
 	.top-info-intro {
+		display: flex;
+		flex-direction: column;
+		justify-content: space-around;
 		width: 100%;
 		height: 60px;
 		margin-left: 10px;

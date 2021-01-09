@@ -5,13 +5,17 @@
     </NavBar>
     <div class="content">
       <van-pull-refresh v-model="isLoading" @refresh="onRefresh">
-        <van-list v-model="loading" :finished="finished" finished-text="暂无更多数据">
+        <van-list v-model="loading" :finished="finished" finished-text="">
           <NewsItem v-for="item in list" :key="item.oflId" :item="item"
             @click.native=" $router.push({path:'/details',query:{oflId:item.oflId}})">
             <div v-if="oflSort!=7" slot="tab">{{item.labels}}</div>
           </NewsItem>
         </van-list>
       </van-pull-refresh>
+      <div v-if="isEmpty==1" style="position: fixed;top: 50%;left: 50%;transform: translate(-50%,-50%);">
+        <img src="~assets/img/empty.png" alt="">
+      </div>
+      <div v-if="isEmpty==2" style="text-align: center;color: #aaa;font-size: 14px;padding: 10px">暂无更多数据</div>
     </div>
   </div>
   </div>
@@ -43,6 +47,7 @@
         loading: false,// 是否处于加载状态
         finished: false,// 是否已加载完成
         list: [],//最新列表
+        isEmpty: 0,
 
       }
     },
@@ -66,6 +71,11 @@
             if (this.PageSize == res.data.length) {
               window.addEventListener("scroll", this.handleScroll)
             } else {
+              if (res.data.length == 0) {
+                this.isEmpty = 1;
+              } else {
+                this.isEmpty = 2;
+              }
               this.finished = true;
             }
           }
@@ -97,6 +107,7 @@
                 this.list = [...this.list, ...res.data];
                 if (this.PageSize > res.data.length) {
                   this.finished = true;
+                  this.isEmpty = 2;
                   window.removeEventListener("scroll", this.handleScroll)
                 }
               }
@@ -106,6 +117,7 @@
       },
       //下拉刷新
       onRefresh() {
+        this.isEmpty = 0
         this.PageNumber = 1;
         this.finished = false;
         this.isLoading = false;

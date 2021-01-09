@@ -30,7 +30,7 @@ export function getLocation(config) {
         ],
         success: function (res) {
           if (res.checkResult.getLocation == false) {
-            console.log('你的微信版本太低，不支持微信JS接口，请升级到最新的微信版本！');
+            alert('你的微信版本太低，不支持微信JS接口，请升级到最新的微信版本！');
             return;
           } else {
             //调用地理位置

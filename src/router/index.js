@@ -42,7 +42,11 @@ const MyCollection = () => import(/* webpackChunkName: "cprofile" */ '../views/c
 const AboutUs = () => import(/* webpackChunkName: "cprofile" */ '../views/cprofile/AboutUs.vue');
 const Setting = () => import(/* webpackChunkName: "cprofile" */ '../views/cprofile/Setting.vue');
 const ApplyNetwork = () => import(/* webpackChunkName: "cprofile" */ '../views/cprofile/ApplyNetwork.vue');
-const Sign = () => import(/* webpackChunkName: "cprofile" */ '../views/cprofile/Sign.vue');
+
+const Search = () => import(/* webpackChunkName: "cprofile" */ '../views/cprofile/Search.vue');
+const NetworkVouchers = () => import(/* webpackChunkName: "cprofile" */ '../views/cprofile/NetworkVouchers.vue');
+
+
 
 
 
@@ -62,6 +66,12 @@ const member = () => import(/* webpackChunkName: "bprofile" */ '../views/bprofil
 const member_detail = () => import(/* webpackChunkName: "bprofile" */ '../views/bprofile/MemberDetail.vue');
 const network = () => import(/* webpackChunkName: "bprofile" */ '../views/bprofile/Network.vue');
 const bussiness = () => import(/* webpackChunkName: "bprofile" */ '../views/bprofile/Bussiness.vue');
+const invite = () => import(/* webpackChunkName: "bprofile" */ '../views/bprofile/Invite.vue');
+const invite_info = () => import(/* webpackChunkName: "bprofile" */ '../views/bprofile/InviteInfo.vue');
+const transfer_manager = () => import(/* webpackChunkName: "bprofile" */ '../views/bprofile/TransferManager.vue');
+const transfer_manager_info = () => import(/* webpackChunkName: "bprofile" */ '../views/bprofile/TransferManagerInfo.vue');
+
+
 
 
 const routes = [
@@ -69,7 +79,7 @@ const routes = [
   { path: '/auth', name: '微信授权', component: Auth },
   { path: '/receiveVouchers', name: '抵用券领取', component: ReceiveVouchers },
 
-  
+
   // 首页
   { path: '/home', name: '首页', component: Home },
   { path: '/details', name: '详情', component: Details },
@@ -101,9 +111,12 @@ const routes = [
   { path: '/aboutUs', name: '关于我们', component: AboutUs },
   { path: '/setting', name: '设置', component: Setting },
   { path: '/applyNetwork', name: '网点申请', component: ApplyNetwork },
-  { path: '/sign', name: '签约', component: Sign },
+  { path: '/search', name: '搜索', component: Search },
+  { path: '/networkVouchers', name: '网点抵用券', component: NetworkVouchers },
 
-  
+
+
+
 
   // b端我的
   { path: '/bprofile', name: '我的', component: BProfile },
@@ -121,6 +134,15 @@ const routes = [
   { path: '/member_detail', name: '会员管理', component: member_detail },
   { path: '/bussiness', name: '商户信息', component: bussiness },
   { path: '/network', name: '网点资料', component: network },
+
+  { path: '/invite', name: '邀请员工', component: invite },
+  { path: '/invite_info', name: '邀请详情', component: invite_info },
+  { path: '/transfer_manager', name: '转移管理员', component: transfer_manager },
+  { path: '/transfer_manager_info', name: '转移管理员详情', component: transfer_manager_info },
+
+
+
+
 ]
 
 const router = new VueRouter({
@@ -129,15 +151,17 @@ const router = new VueRouter({
   routes
 })
 router.beforeEach((to, from, next) => {
- 
   if (to.path != "/auth") {
-     setStore('beforeUrl', to.fullPath);
-     next()
+
+    setStore('beforeUrl', to.fullPath);
+
     let _token = getStore('token');
     if (!_token) {
-      // let url = encodeURIComponent('http://dragonworld.top/futureBaby/index.html#/auth');
-      // window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxd77b65042c011f00&redirect_uri=${url}&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect`;
-    } else {
+     
+        let url = encodeURIComponent('http://dragonworld.top/futureBaby/index.html#/auth');
+        window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxd77b65042c011f00&redirect_uri=${url}&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect`;
+      
+        } else {
       next();
     }
   } else {

@@ -1,8 +1,12 @@
 <template>
   <div id="app">
-    <router-view></router-view>
+    <keep-alive include="applyNetwork">
+      <router-view></router-view>
+    </keep-alive>
+      
   </div>
 </template>
+
 <style lang="scss">
   @import '~assets/css/reset.scss';
   @import '~assets/css/iconfont.css';

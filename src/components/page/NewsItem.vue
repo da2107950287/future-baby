@@ -1,7 +1,7 @@
 <template>
   <div class="news-item">
     <img  :src="item.purl" alt="">
-    <div class="right">
+    <div class="right1">
       <div class="title">{{item.title}}</div>
       <div class="right-bottom">
         <!-- <div class="tab"> -->
@@ -42,9 +42,10 @@
       margin-right: .5rem;
     }
 
-    .right {
+    .right1 {
       @include fj();
       flex-direction: column;
+      width: 100%;
 
       .title {
         @include sc(.75rem, #333);

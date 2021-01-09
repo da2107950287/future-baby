@@ -21,19 +21,20 @@
             <span v-if="info.status==1">进行中</span>
             <span v-else-if="info.status==2">即将过期</span>
             <span v-else-if="info.status==3">即将失效</span>
+            <span v-else-if="info.status==4">未付款</span>
           </div>
         </div>
         <div class="item-card">
           <div class="item-card-img">
             <div class="img">
-              <div class="card-name">{{info.commodity.comName}}</div>
-              <div class="course-name">{{info.commodity.courseName}}</div>
-              <div class="course-english-name">{{info.commodity.courseEnglishName}}</div>
+              <div class="card-name">{{commodity.comName}}</div>
+              <div class="course-name">{{commodity.courseName}}</div>
+              <div class="course-english-name">{{commodity.courseEnglishName}}</div>
             </div>
           </div>
           <div class="item-card-content">
-            <div>{{info.commodity.courseName}}</div>
-            <div>{{info.commodity.comName}}</div>
+            <div>{{commodity.courseName}}</div>
+            <div>{{commodity.comName}}</div>
           </div>
         </div>
         <div class="prices">
@@ -54,8 +55,8 @@
           <div class="real-payment common">
             <span class="font6">实付额</span>
             <div>
-              <span class="font4">&yen;</span><span class="font6">{{info.orderPrice | formatPriceInteger}}</span><span
-                class="font4">{{info.orderPrice |formatPriceDecimal}}</span>
+              <span class="font4">&yen;</span><span class="font6">{{info.finalPrice | formatPriceInteger}}</span><span
+                class="font4">{{info.finalPrice |formatPriceDecimal}}</span>
             </div>
           </div>
         </div>
@@ -72,19 +73,21 @@
             <span v-if="info.status==1">进行中</span>
             <span v-else-if="info.status==2">即将过期</span>
             <span v-else-if="info.status==3">即将失效</span>
+            <span v-else-if="info.status==4">未付款</span>
+
           </div>
         </div>
         <div class="order-info-item">
           <div class="order-info-item-title">生成时间</div>
           <div>{{info.orderTime}}</div>
         </div>
-        <div class="order-info-item">
+        <div class="order-info-item" v-if="info.status!=4">
           <div class="order-info-item-title">到期时间</div>
           <div>{{info.endTime}}</div>
         </div>
       </div>
       <div class="btns">
-        <div @click="show=true">邀请打卡</div>
+        <!-- <div @click="show=true">邀请打卡</div> -->
         <div @click="$router.go(-1)">返回上一页</div>
       </div>
     </div>
@@ -113,8 +116,16 @@
     data() {
       return {
         show: false,
-        info: {},
-        orderInfo: {}
+     
+        info: {
+          dtnPrice:'',
+          orderPrice:'',
+          finalPrice:''
+        },
+        commodity:{
+   
+          
+        },
       }
     },
     filters: {
@@ -140,6 +151,7 @@
         }).then(res => {
           if (res.code == 200) {
             this.info = res.data;
+            this.commodity=res.data.commodity;
 
           }
         })
@@ -407,6 +419,10 @@
       margin-bottom: 15px;
     }
 
+    .order-info{
+      background-color: #fff;
+      padding: 20px;
+    }
     .order-info-item {
       width: 100%;
       height: 28px;

@@ -1,7 +1,7 @@
 <template>
   <div class="logo-tel">
     <img :src="logo" alt="">
-    <div>{{mobile}}</div>
+    <div @click="call">{{mobile}}</div>
   </div>
 </template>
 <script>
@@ -24,6 +24,9 @@
           }
         })
       },
+      call() {
+        window.location.href = `tel://${this.mobile}`;
+      }
     }
   }
 </script>
@@ -47,10 +50,10 @@
     @include fj();
     align-items: center;
     font-size: .75rem;
-   
+
     /* @include font(.75rem, 1.05rem); */
 
-    padding:0 1rem;
+    padding: 0 1rem;
     font-weight: 600;
     color: $fc;
     background-color: #F24142;

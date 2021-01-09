@@ -5,7 +5,7 @@
     </NavBar>
     <div class="content">
       <div class="item">
-        <div class="text">是否愿意接收课程介绍的微信通知</div>
+        <div class="text">是否愿意接收打卡相关提醒</div>
         <van-switch @change="change('tip1',tip1)" v-model="tip1" size=".95rem" active-color="#FC4B4C" />
       </div>
       <div class="item">
