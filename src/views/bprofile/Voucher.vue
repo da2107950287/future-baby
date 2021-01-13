@@ -121,7 +121,7 @@
 				}).then(res => {
 					if (res.code == 200) {
 						this.dtnId = res.data;
-						this.link = `${window.location.origin}/futureBaby/index.html?#/receiveVouchers?dtnId=${this.dtnId}`
+						this.link = `${window.location.href.split("#")[0]}?#/receiveVouchers?dtnId=${this.dtnId}`
 					}
 				})
 			},
@@ -156,7 +156,7 @@
 					this.config = res.data;
 					let obj = {
 						title: '未来宝贝', // 分享标题
-						link: `${window.location.origin}/futureBaby/index.html?#/home`, // 分享链接
+						link: `${window.location.href.split('#')[0]}?#/home`, // 分享链接
             imgurls: require('../../assets/img/logoShare.jpg')
 
 					}

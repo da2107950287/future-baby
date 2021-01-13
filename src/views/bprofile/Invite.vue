@@ -94,7 +94,7 @@
           let obj = {
               title: this.olsName, // 分享标题
               desc: '邀请你加入',
-              link: `${window.location.origin}/futureBaby/index.html?#/invite_info?staId=${this.staId}`, // 分享链接
+              link: `${window.location.href.split('#')[0]}?#/invite_info?staId=${this.staId}`, // 分享链接
               imgurls: getStore('image')
             }
             wxShare(this.config, obj, (msg) => {
@@ -115,7 +115,7 @@
           let obj = {
             title: '未来宝贝', // 分享标题
           
-            link: `${window.location.origin}/futureBaby/index.html?#/home`, // 分享链接
+            link: `${window.location.href.split('#')[0]}?#/home`, // 分享链接
             imgurls: require('../../assets/img/logoShare.jpg')
 
             

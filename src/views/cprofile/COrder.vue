@@ -4,7 +4,7 @@
       <div slot="center">我的订单</div>
     </NavBar>
     <div class="order-list">
-      <van-tabs sticky="true" v-model="activeName" line-height="2px" title-active-color="#FF5246" title-inactive-color="#333"
+      <van-tabs :sticky="true" v-model="activeName" line-height="2px" title-active-color="#FF5246" title-inactive-color="#333"
         color="#FF5246">
         <van-tab v-for="item in tabs" :key="item.name" :title="item.title" :name="item.name">
           <div class="total">
@@ -16,7 +16,7 @@
             <van-calendar :minDate="new Date(1970,0,1)" :maxDate="new Date()" v-model="showCalendar" @confirm="onConfirm" />
           </div>
           <van-pull-refresh v-model="isLoading" @refresh="onRefresh">
-            <van-list v-model="loading" :finished="finished" finished-text="">
+            <van-list v-model="loading" :finished="finished" finished-text="" @load="handleScroll">
               <Corder v-for="item1 in list" :key="item1.olId" :item="item1"
                 @click.native="$router.push({path:'/COrderDetail',query:{olId:item1.olId}})">
               </Corder>
@@ -71,6 +71,7 @@
     },
     created() {
       this.getOrderlist()
+
     },
     methods: {
       isShowCalendar() {
@@ -84,10 +85,11 @@
             valid = true;
           }, 500)
       },
+      
       getOrderlist() {
         this.loading = true;
         this.$http('/orderlist/getOrderlist', {
-          status: this.activeName,
+          status: parseInt(this.activeName),
           uid: getStore("uid"),
           datatime: this.datatime,
           PageNumber: this.PageNumber,
@@ -98,16 +100,14 @@
           this.orderlistMoney = res.data.orderlistMoney || 0;
           this.orderlistNumber = res.data.orderlistNumber || 0;
           this.list = res.data.orderlist;
-          if (this.PageSize == res.data.orderlist.length) {
-            window.addEventListener("scroll", this.handleScroll)
-          } else {
+          if (this.PageSize != res.data.orderlist.length) {
             if (res.data.orderlist.length == 0) {
               this.isEmpty = 1;
             } else {
               this.isEmpty = 2;
             }
             this.finished = true;
-          }
+          } 
         })
       },
       //下拉刷新
@@ -134,7 +134,7 @@
             this.PageNumber++;
             this.loading = true
             this.$http('/orderlist/getOrderlist', {
-              status: this.activeName,
+              status: parseInt(this.activeName),
               uid: getStore("uid"),
               datatime: this.datatime,
               PageNumber: this.PageNumber,
@@ -145,11 +145,11 @@
                 this.loading = false;
                 this.orderlistMoney = res.data.orderlistMoney;
                 this.orderlistNumber = res.data.orderlistNumber;
-                this.list = [...this.list, ...res.data];
-                if (this.PageSize > res.data.length) {
+                this.list = [...this.list, ...res.data.orderlist];
+                if (this.PageSize > res.data.orderlist.length) {
                   this.isEmpty = 2;
                   this.finished = true;
-                  window.removeEventListener("scroll", this.handleScroll)
+             
                 }
               }
             })
@@ -163,6 +163,7 @@
         this.finished = false;
         this.PageNumber = 1;
         this.list = [];
+        this.isEmpty=0;
         this.getOrderlist()
       },
     },

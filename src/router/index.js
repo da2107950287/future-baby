@@ -152,16 +152,15 @@ const router = new VueRouter({
 })
 router.beforeEach((to, from, next) => {
   if (to.path != "/auth") {
-
     setStore('beforeUrl', to.fullPath);
 
     let _token = getStore('token');
     if (!_token) {
-     
-        let url = encodeURIComponent('http://dragonworld.top/futureBaby/index.html#/auth');
-        window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxd77b65042c011f00&redirect_uri=${url}&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect`;
-      
-        } else {
+      // let url = encodeURIComponent('http://dragonworld.top/futureBaby/index.html#/auth');
+      let url = encodeURIComponent(`${window.location.href.split('#')[0]}#/auth`);
+      window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxd77b65042c011f00&redirect_uri=${url}&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect`;
+
+    } else {
       next();
     }
   } else {

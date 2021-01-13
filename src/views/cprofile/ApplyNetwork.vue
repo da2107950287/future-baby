@@ -35,8 +35,7 @@
             label="商户营业名称" placeholder="请输入营业名称" :error-message="verification.shopName" @blur="VerifyCellShopName" />
 
           <van-field required is-link v-model="query.bankBranchName" label="	开户行支行名称" placeholder="请输入开户行支行名称"
-            :error-message="verification.bankBranchName" @change="VerifyCellBankBranchName"
-            @click="$router.push('/search')" />
+            :error-message="verification.bankBranchName" @change="VerifyCellBankBranchName" @click="goSearch" />
 
           <van-field required v-model="query.bankAcctName" label="	开户帐号姓名" placeholder="请输入开户帐号姓名"
             :error-message="verification.bankAcctName" @blur="VerifyCellBankAcctName" />
@@ -416,7 +415,7 @@
 <script>
   import NavBar from 'components/common/navbar/NavBar';
   import MySelect from 'components/page/MySelect'
-  import { isPhone, isEmail, formatDate, getStore } from "assets/js/utils.js";
+  import { isPhone, isEmail, formatDate, getStore, setStore } from "assets/js/utils.js";
   import region from "assets/js/region.js";
   import { wxUpload } from "assets/js/wx.js"
   import { uploadPost } from 'assets/js/http.js'
@@ -560,32 +559,50 @@
         auxiliaryPhoto1: [],//辅助证明材料1
         auxiliaryPhoto2: [],//辅助证明材料2
         auxiliaryPhoto3: [],//辅助证明材料3
-        params: ''
+        params: '',
+        beforeUrl: ''
       };
     },
 
 
 
-    activated() {
-      console.log(this.query)
-      if (this.$route.query.bankNo) {
-        this.query.bankNo = this.$route.query.bankNo;
-
-      }
-      if (this.$route.query.bankBranchName) {
-        this.query.bankBranchName = this.$route.query.bankBranchName;
-
-      }
+    beforeRouteEnter(to, from, next) {
+      next(vm => {
+        // 通过 `vm` 访问组件实例,将值传入oldUrl
+        vm.beforeUrl = from.path
+      })
     },
-    created() {
-      this.showMerchants()
-      this.mccCodeArr = [
-        { values: this.arr },
-        { values: this.arr[0].children }
-      ]
+    mounted() {
+      this.$nextTick(() => {
+
+        if (this.beforeUrl != '/search') {
+          this.showMerchants()
+          this.mccCodeArr = [
+            { values: this.arr },
+            { values: this.arr[0].children }
+          ]
+        } else {
+          this.query = JSON.parse(getStore("query"))
+          this.region = this.query.shopProvinceName + this.query.shopCityName + this.query.shopCountryName;
+          this.mccCode = this.arr.filter(el => {
+            return el.children.find(val => {
+              return val.value == this.query.mccCode
+            })
+          })[0].text;
+          if (this.$route.query.bankNo && this.$route.query.bankBranchName) {
+            this.query.bankNo = this.$route.query.bankNo;
+            this.query.bankBranchName = this.$route.query.bankBranchName;
+          }
+
+        }
+      })
     },
+
     methods: {
-
+      goSearch() {
+        this.$router.push('/search')
+        setStore('query', JSON.stringify(this.query))
+      },
 
       //确认日期
       onConfirm1(date) {

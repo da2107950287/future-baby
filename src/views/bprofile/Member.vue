@@ -4,11 +4,11 @@
       <div slot="center">会员管理</div>
     </NavBar>
     <div class="order-list">
-      <van-tabs sticky="true" v-model="activeName" line-height="2px" title-active-color="#FF5246" title-inactive-color="#333"
+      <van-tabs :sticky="true" v-model="activeName" line-height="2px" title-active-color="#FF5246" title-inactive-color="#333"
         color="#FF5246" >
         <van-tab  v-for="item in tabs" :key="item.name" :title="item.title" :name="item.name">
           <van-pull-refresh v-model="isLoading" @refresh="onRefresh">
-            <van-list v-model="loading" :finished="finished" finished-text="">
+            <van-list v-model="loading" :finished="finished" finished-text="" @load="handleScroll">
               <div class="total">
                 <div class="total-left">
                   <span>共<b> {{memberNumber}} </b>名会员</span>
@@ -42,7 +42,7 @@
       return {
         isEmpty: 0,
         PageNumber: 1,//当前页数
-        PageSize: 10,//每页显示多少条
+        PageSize: 3,//每页显示多少条
         clock: 0,//1 可以请求数据
         isLoading: false,// 是否处于加载中状态
         loading: false,// 是否处于加载状态
@@ -94,9 +94,8 @@
             this.loading = false;
             this.list = res.data.member;
             this.memberNumber = res.data.memberNumber
-            if (this.PageSize == res.data.member.length) {
-              window.addEventListener("scroll", this.handleScroll)
-            } else {
+            if (this.PageSize != res.data.member.length) {
+            
               if (res.data.member.length == 0) {
                 this.isEmpty = 1;
               } else {
@@ -128,6 +127,7 @@
               PageSize: this.PageSize
             }).then(res => {
               if (res.code == 200) {
+               
                 this.clock = 1;
                 this.loading = false;
                 this.memberNumber = res.data.memberNumber
@@ -135,7 +135,7 @@
                 if (this.PageSize > res.data.member.length) {
                   this.isEmpty = 2;
                   this.finished = true;
-                  window.removeEventListener("scroll", this.handleScroll)
+             
                 }
               }
             })

@@ -23,7 +23,11 @@
             if (res.code == 200) {
               setStore("token", res.data.token);
               setStore("uid", res.data.uid);
-              this.$router.push(getStore('beforeUrl'))
+              if (getStore('beforeUrl')) {
+                this.$router.push('/home');
+              } else {
+                this.$router.push(getStore('beforeUrl'))
+              }
             }
           })
         }

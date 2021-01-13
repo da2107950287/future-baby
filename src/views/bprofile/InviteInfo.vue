@@ -66,7 +66,7 @@
           if (res.code == 200) {
             this.$toast.success(res.msg);
             this.showStaff()
-          } else if (res.code == 200) {
+          } else if (res.code == 500) {
             this.$toast.fail(res.msg);
           }
         })

@@ -339,7 +339,7 @@
           this.config = res.data;
           let obj = {
             title: "未来宝贝", // 分享标题
-            link: `${window.location.origin}/futureBaby/index.html?#/home`, // 分享链接
+            link: `${window.location.href.split('#')[0]}?#/home`, // 分享链接
             imgurls: require('../../assets/img/logoShare.jpg')
           }
           wxShare(this.config, obj, (msg) => {

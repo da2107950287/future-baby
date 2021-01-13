@@ -4,14 +4,23 @@
 			<div slot="center">教案中心</div>
 		</NavBar>
 		<div>
-			<div v-for="item in list" :key="item.oflId" @click="$router.push({path:'/details',query:{oflId:item.oflId}})"  class="item">
+			<van-pull-refresh v-model="isLoading" @refresh="onRefresh">
+        <van-list v-model="loading" :finished="finished" finished-text="">
+			<div v-for="item in list" :key="item.oflId" @click="$router.push({path:'/details',query:{oflId:item.oflId}})"
+				class="item">
 				<div class="cover"><img :src="item.purl" alt=""></div>
 				<div class="content">
 					<div class="title">{{item.title}}</div>
 					<div class="date">{{item.oflTime}}</div>
 				</div>
 			</div>
-	
+		</van-list>
+	</van-pull-refresh>
+			<div v-if="isEmpty==1" style="position: fixed;top: 50%;left: 50%;transform: translate(-50%,-50%);">
+        <img src="~assets/img/empty.png" alt="">
+      </div>
+      <div v-if="isEmpty==2" style="text-align: center;color: #aaa;font-size: 14px;padding: 10px">暂无更多数据</div>
+   
 		</div>
 	</div>
 </template>
@@ -23,19 +32,19 @@
 				PageNumber: 1,//当前页数
 				PageSize: 10,//每页显示多少条
 				list: [],//教案列表
+				isEmpty: 0,
+				isLoading: false,// 是否处于加载中状态
+        loading: false,// 是否处于加载状态
+        finished: false,// 是否已加载完成
 			}
 		},
-		created(){
-this.getOfficial()
+		created() {
+			this.getOfficial()
 		},
 		methods: {
 			//获取教案列表
 			getOfficial() {
-				this.$toast.loading({
-					duration: 0,
-					message: '加载中...',
-					forbidClick: true,
-				});
+				this.loading=true;
 				this.$http('/official/getOfficial', {
 					oflSort: 8,
 					oflType: 3,
@@ -43,11 +52,18 @@ this.getOfficial()
 					PageSize: this.PageSize
 				}).then(res => {
 					if (res.code == 200) {
-						this.$toast.clear();
+						this.loading=false
 						this.clock = 1;
 						this.list = res.data;
 						if (this.PageSize == res.data) {
 							window.addEventListener("scroll", this.handleScroll)
+						} else {
+							if (res.data.length == 0) {
+								this.isEmpty = 1;
+							} else {
+								this.isEmpty = 2
+							}
+							this.finished = true;
 						}
 					}
 				})
@@ -65,11 +81,7 @@ this.getOfficial()
 					if (this.clock == 1) {
 						this.clock = 2;
 						this.PageNumber++;
-						this.$toast.loading({
-							duration: 0,
-							message: '加载中...',
-							forbidClick: true,
-						});
+						this.loading=true
 						this.$http('/official/getOfficial', {
 							oflSort: 8,
 							oflType: 3,
@@ -77,10 +89,12 @@ this.getOfficial()
 							PageSize: this.PageSize
 						}).then(res => {
 							if (res.code == 200) {
-								this.$toast.clear();
+								this.loading=false;
 								this.clock = 1;
+								this.isEmpty = 2;
 								this.list = [...this.list, ...res.data];
 								if (this.PageSize > res.data.length) {
+									this.finished=true;
 									window.removeEventListener("scroll", this.handleScroll)
 								}
 							}
@@ -88,17 +102,25 @@ this.getOfficial()
 					}
 				}
 			},
-		
+  //下拉刷新
+	onRefresh() {
+        this.PageNumber = 1;
+        this.isEmpty=0;
+        this.finished = false;
+        this.isLoading = false;
+        this.list = [];
+        this.getOfficial();
+      },
 		},
 		beforeDestroy() {
-      window.removeEventListener("scroll", this.handleScroll)
-    },
+			window.removeEventListener("scroll", this.handleScroll)
+		},
 
 		components: {
 			NavBar,
 
 		},
-		
+
 	}
 </script>
 
@@ -141,7 +163,8 @@ this.getOfficial()
 		font-weight: bold;
 
 	}
-	.title{
+
+	.title {
 		@include ellipsis();
 	}
 
@@ -150,6 +173,6 @@ this.getOfficial()
 		width: 100%;
 		font-size: 12px;
 		color: #AAAAAA;
-		
+
 	}
 </style>

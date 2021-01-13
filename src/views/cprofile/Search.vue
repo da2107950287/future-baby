@@ -33,6 +33,7 @@
               <van-button size="small" type="danger" @click="branchBankList">搜索</van-button>
             </template>
           </van-field>
+          <van-field class="keyword" label="搜索实例：武汉/光谷/工商" ></van-field>
         </van-form>
 
       </div>

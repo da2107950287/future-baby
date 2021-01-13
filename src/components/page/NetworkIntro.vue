@@ -19,24 +19,24 @@
 <script>
   export default {
     props: {
-      olsName:{
+      olsName: {
         type: String,
         default() {
           return ''
         }
       },
       address: {},
-      mobile:{
-        type:String,
-        default(){
+      mobile: {
+        type: String,
+        default() {
           return ''
         }
       }
     },
-    methods:{
-      call(){
-				window.location.href=`tel://${this.mobile}`;
-			}
+    methods: {
+      call() {
+        window.location.href = `tel://${this.mobile}`;
+      }
     }
   }
 </script>
@@ -56,6 +56,8 @@
         font-family: PingFangSC-Medium, PingFang SC;
         font-weight: 500;
         color: #333333;
+
+        margin-right: 5px;
       }
 
 

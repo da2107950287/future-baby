@@ -64,7 +64,7 @@
         isLoading: false,// 是否处于加载中状态
         loading: false,// 是否处于加载状态
         finished: false,// 是否已加载完成
-        config:{},
+        config: {},
         tabs: [
           { title: "品牌介绍", name: "1" },
           { title: "育儿知识", name: "2" },
@@ -82,13 +82,13 @@
       },
     },
     mounted() {
-
       this.getConfig();
       this.getBanner();
       this.initSwiper();
       this.getNotice();
-      this.getOfficial();
       this.getAppConfig();
+      this.getOfficial()
+
     },
     methods: {
       //获取定位
@@ -100,12 +100,13 @@
           if (res.code == 200) {
             this.config = res.data;
             getLocation(this.config).then(result => {
-              setStore('longitude',result.longitude);
-              setStore('latitude',result.latitude)
-              this.getLocationCity(result.longitude,result.latitude);
+              setStore('longitude', result.longitude);
+              setStore('latitude', result.latitude)
+              if (!getStore('city')) {
+                this.getLocationCity(result.longitude, result.latitude);
+              }
             }).catch(err => {
               // this.$toast.fail('获取地理位置失败')
-              
             })
           }
         })
@@ -118,11 +119,10 @@
         // 创建地理编码实例      
         var myGeo = new BMapGL.Geocoder();
         // 根据坐标得到地址描述    
-        myGeo.getLocation(new BMapGL.Point(longitude,latitude), (reslut) => {
+        myGeo.getLocation(new BMapGL.Point(longitude, latitude), (reslut) => {
           if (reslut) {
-            setStore('province',reslut.addressComponents.province)
-            setStore('city',reslut.addressComponents.city)
-         
+            setStore('province', reslut.addressComponents.province)
+            setStore('city', reslut.addressComponents.city)
           }
         });
       },

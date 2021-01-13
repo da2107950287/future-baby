@@ -4,8 +4,8 @@
       <div slot="center">我的订单</div>
     </NavBar>
     <div class="order-list">
-      <van-tabs sticky="true" v-model="activeName" line-height="2px" title-active-color="#FF5246" title-inactive-color="#333"
-        color="#FF5246">
+      <van-tabs :sticky="true" v-model="activeName" line-height="2px" title-active-color="#FF5246"
+        title-inactive-color="#333" color="#FF5246">
         <van-tab v-for="item in tabs" :key="item.name" :title="item.title" :name="item.name">
           <div class="total">
             <div class="total-left">
@@ -17,7 +17,7 @@
 
           </div>
           <van-pull-refresh v-model="isLoading" @refresh="onRefresh">
-            <van-list v-model="loading" :finished="finished">
+            <van-list v-model="loading" :finished="finished" @load="handleScroll">
               <Border v-for="item1 in list" :key="item1.olId" :item="item1"></Border>
             </van-list>
           </van-pull-refresh>
@@ -100,9 +100,7 @@
           this.orderlistMoney = res.data.orderlistMoney || 0;
           this.orderlistNumber = res.data.orderlistNumber || 0;
           this.list = res.data.orderlist;
-          if (this.PageSize == res.data.length) {
-            window.addEventListener("scroll", this.handleScroll)
-          } else {
+          if (this.PageSize != res.data.orderlist.length) {
             if (res.data.orderlist.length == 0) {
               this.isEmpty = 1;
             } else {
@@ -123,7 +121,8 @@
       },
       //瀑布流加载
       handleScroll() {
-        //变量scrollTop是滚动条滚动时，距离顶部的距离
+       
+        // //变量scrollTop是滚动条滚动时，距离顶部的距离
         var scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop;
         //变量windowHeight是可视区的高度
         var clientHeight = document.documentElement.clientHeight || document.body.clientHeight;
@@ -147,11 +146,11 @@
                 this.loading = false;
                 this.orderlistMoney = res.data.orderlistMoney;
                 this.orderlistNumber = res.data.orderlistNumber;
-                this.list = [...this.list, ...res.data];
-                if (this.PageSize > res.data.length) {
+                this.list = [...this.list, ...res.data.orderlist];
+                if (this.PageSize > res.data.orderlist.length) {
                   this.isEmpty = 2;
                   this.finished = true;
-                  window.removeEventListener("scroll", this.handleScroll)
+                
                 }
               }
             })
@@ -165,6 +164,7 @@
         this.finished = false;
         this.PageNumber = 1;
         this.list = [];
+        this.isEmpty = 0;
         this.getOrderlist()
       },
     },

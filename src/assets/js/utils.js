@@ -97,7 +97,8 @@ export function chineseLetter(arr, dataLeven) {
   }
 }
 export function getRequest() {
-  var url = window.location.search; //获取url中"?"符后的字串
+  var url = window.location.href; //获取url中"?"符后的字串
+  console.log(url)
   var theRequest = new Object();
   if (url.indexOf("?") != -1) {
     var str = url.substr(1);

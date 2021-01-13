@@ -105,14 +105,14 @@
         </div>
         <div>设置</div>
       </div>
-      <div v-if="role!=2" class="item1" @click="$router.push('/applyNetwork')">
+      <div v-if="role==1" class="item1" @click="$router.push('/applyNetwork')">
         <div class="img-box">
           <img src="~assets/img/cprofile/apply.png" alt="">
         </div>
         <div>申请商户</div>
       </div>
     </div>
-    <div v-if="role==2" style="padding: .5rem 5rem 1rem;">
+    <div v-if="role==2 || role==3 || role==4" style="padding: .5rem 5rem 1rem;">
       <van-button plain round block type="danger" @click="exchange">切换至商户端</van-button>
     </div>
     <MainTabBar></MainTabBar>
@@ -247,6 +247,9 @@
 
       .card-left {
         div:first-child {
+          display: flex;
+          align-items: center;
+
           span {
             font-family: PingFangSC-Semibold, PingFang SC;
             font-weight: 600;
@@ -254,10 +257,17 @@
             &.name {
               @include sc(.75rem, #8B7054);
               margin-right: .5rem;
+              display: inline-block;
+              width: 9.5rem;
+              overflow: hidden;
+              white-space: nowrap;
+              text-overflow: ellipsis;
             }
 
             &.status {
-              @include sc(.65rem, #F38A4A)
+              @include sc(.65rem, #F38A4A);
+
+
             }
           }
 

@@ -87,7 +87,6 @@
             </div>
           </van-list>
         </van-pull-refresh>
-
       </div>
     </div>
     <PopUp :show="showToast">
@@ -162,7 +161,6 @@
         this.$http('/userinfo/getConfig', {
           url: window.location.href.split('#')[0]
         }).then(res => {
-
           if (res.code == 200) {
             this.config = res.data;
             getLocation(this.config).then(result => {
@@ -231,6 +229,8 @@
         this.PageNumber = 1;
         this.list = [];
         this.getOutlets();
+        setStore('province',this.province)
+        setStore('city',this.city)
 
         // this.getPoint();
 
@@ -243,6 +243,9 @@
         this.PageNumber = 1;
         this.list = [];
         this.getOutlets()
+        setStore('province',this.province)
+        setStore('city',this.city)
+
         // this.getPoint();
 
       },
@@ -549,6 +552,9 @@
           .item-top-right {
             @include fj();
             flex-direction: column;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
 
             .name {
               @include sc(.75rem, #333);
