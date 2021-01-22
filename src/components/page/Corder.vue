@@ -10,12 +10,15 @@
           <span v-if="item.status==1">进行中</span>
           <span v-else-if="item.status==2">即将过期</span>
           <span v-else-if="item.status==3">已失效</span>
+          <span v-else-if="item.status==4">未付款</span>
+
+
         </div>
       </div>
       <div class="center">
         <!-- <img src="../../assets/img/icon_ka.png" alt=""> -->
         <div class="img">
-       
+
           <div class="card-name">{{item.commodity.comName}}</div>
           <div class="course-name">{{item.commodity.courseName}}</div>
           <div class="course-english-name">{{item.commodity.courseEnglishName}}</div>
@@ -41,7 +44,7 @@
         </div>
       </div>
     </div>
- </div>
+  </div>
 </template>
 <script>
   export default {
@@ -117,13 +120,13 @@
         @include fj(flex-start);
         align-items: center;
         margin-top: 1rem;
-      
+
 
 
         .img {
           @include wh(4rem, 2.25rem);
           @include fj(flex-start);
-          
+
           align-items: center;
 
           flex-direction: column;
@@ -131,7 +134,7 @@
 
           background: linear-gradient(225deg, #F2D197 0%, #DAB074 100%);
           border-radius: 0.2rem;
-          
+
 
 
           >div {

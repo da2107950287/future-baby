@@ -8,7 +8,8 @@
         <div class="title">网点名称：{{olsName}}</div>
         <div class="money">员工权限：
           <span v-if="$route.query.power==3">订单管理</span>
-          <span v-else-if="$route.query.power==4">会员管理</span></div>
+          <span v-else-if="$route.query.power==4">会员管理</span>
+        </div>
         <div class="create-btn" @click="transferStaff">生成转移链接</div>
       </div>
       <div class="info">
@@ -17,6 +18,14 @@
         <div class="copy-btn" :data-clipboard-text="link" @click="copy">复制链接并分享</div>
       </div>
     </div>
+    <van-overlay :show="isShow" @click="isShow = false">
+      <div class="wrapper" @click.stop>
+        <div class="share">
+          <img class="arrow" src="~assets/img/arrow.png" alt="">
+          <img class="text" src="~assets/img/share.png" alt="">
+        </div>
+      </div>
+    </van-overlay>
   </div>
 </template>
 <script>
@@ -28,7 +37,7 @@
       return {
         power: '3',
         olsName: '',
-
+        isShow:false,
         staId: '',
         link: ''
       }
@@ -42,7 +51,7 @@
         this.$http('/outlets/showOutletsInfo').then(res => {
           if (res.code == 200) {
             this.olsName = res.data.olsName;
-         
+
           }
         })
       },
@@ -59,6 +68,7 @@
       copy() {
         let clipboard = new Clipboard('.copy-btn');
         clipboard.on("success", e => {
+          this.isShow=true;
           clipboard.destroy();
         })
       },
@@ -72,6 +82,30 @@
 
 <style lang="scss" scoped>
   @import '~assets/css/mixin.scss';
+
+  .share {
+    width: 100%;
+    padding: 0 1rem;
+    position: absolute;
+    left: 50%;
+    top: 10px;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+
+    .arrow {
+
+      height: 60px;
+      width: 60px
+    }
+
+    .text {
+      margin-top: 10px;
+      margin-right: 60px;
+      width: 60vw;
+    }
+  }
 
   .err-msg {
     @include sc(.6rem, #FC4B4C)
@@ -149,7 +183,7 @@
   }
 
   .url {
-    
+
     height: 40px;
     background: #F2F2F2;
     border-radius: 5px;
