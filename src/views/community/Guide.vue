@@ -5,7 +5,7 @@
     </NavBar>
     <div class="content">
       <van-pull-refresh v-model="isLoading" @refresh="onRefresh" style="width: 100%">
-        <van-list v-model="loading" :finished="finished" finished-text="暂无更多数据">
+        <van-list class="tab-list" v-model="loading" :finished="finished" finished-text="暂无更多数据">
           <GuideItem v-for="item in list" :key="item.oflId" :item="item"
           @click.native=" $router.push({path:'/details',query:{oflId:item.oflId}})">
         </GuideItem>
@@ -111,7 +111,10 @@
 </script>
 <style lang="scss" scoped>
   @import '~assets/css/mixin.scss';
-
+.tab-list{
+  height: calc(100vh - 44px);
+    overflow-y: scroll
+}
   .content {
     padding: .75rem 1rem 0;
     @include fj();

@@ -1,16 +1,14 @@
 <template>
   <div class="audition">
     <NavBar>
-      <div slot="center">预约试听</div>
+      <div slot="center">预约一周免费试听课</div>
     </NavBar>
     <div class="content">
       <img class="cover" :src="$route.query.cover" alt="">
       <div class="form-box">
         <van-form class="form">
-          <van-field v-model="query.fullname" name="姓名" label="姓名" placeholder="请填写姓名"
-            :error-message="verification.fullname" @blur="VerifyCellFullName" />
-          <van-field v-model="query.mobile" type="tel" name="手机" label="手机" placeholder="请填写手机号码"
-            :error-message="verification.mobile" @blur="VerifyCellMobile" />
+          <van-field v-model="query.fullname" name="宝宝姓名" label="宝宝姓名" placeholder="请填写"
+            :error-message="verification.fullname" @blur="VerifyCellFullName" required />
           <van-field name="radio" label="宝宝性别" :error-message="verification.sex">
             <template #input>
               <van-radio-group v-model="query.sex" direction="horizontal">
@@ -20,11 +18,18 @@
             </template>
           </van-field>
           <van-field readonly is-link name="calendar" v-model="query.birthday" label="宝宝生日" placeholder="请选择宝宝生日"
-            @click="showCalendar = true" :error-message="verification.birthday" @input="VerifyCellBirthday" />
+            @click="showCalendar = true" :error-message="verification.birthday" />
           <van-popup v-model="showCalendar" position="bottom">
             <van-datetime-picker v-model="currentDate" type="date" :minDate="minDate" :maxDate="maxDate"
               @confirm="onConfirm" @cancel="showCalendar = false" />
           </van-popup>
+          <van-field is-link @click="showIndentity = true" v-model="query.parentIdentity" name="家长身份" label="家长身份"
+            placeholder="请填写" :error-message="verification.parentIdentity" required @input="VerifyCellParentIdentity" />
+          <van-action-sheet v-model="showIndentity" :actions="actions" @select="onSelect" />
+          <van-field v-model="query.parentFullname" name="家长姓名" label="家长姓名" placeholder="请填写"
+            :error-message="verification.parentFullname" />
+          <van-field v-model="query.mobile" name="家长手机" type="tel" maxlength=11 label="家长手机" placeholder="请填写"
+            :error-message="verification.mobile" @blur="VerifyCellMobile" required />
         </van-form>
         <van-button class="btn" round block color="#FC4B4C" native-type="submit" @click="submit">立即预约</van-button>
       </div>
@@ -45,43 +50,51 @@
           olsId: '',//网点ID
           fullname: '',//昵称
           mobile: '',//手机号
-          sex: '',//性别
+          sex: '男',//性别
           birthday: '',//生日
+          parentFullname: '',//家长姓名
+          parentIdentity: '',//家长身份
         },
         verification: {
           fullname: '',
           mobile: '',
-          sex: '',
-          birthday: '',
+          parentIdentity: ''
         },//错误提示
         showCalendar: false,//是否显示日历
+        showIndentity: false,
+        actions: [{ name: '父亲' }, { name: '母亲' }],
+
       };
     },
+   
+
     created() {
       this.query.olsId = this.$route.query.olsId;
     },
     methods: {
+      onSelect(item) {
+        this.showIndentity = false;
+        this.query.parentIdentity = item.name
+
+      },
       //立即预约
       submit() {
-          if (!this.VerifyCellFullName()) return false;
-          if (!this.VerifyCellMobile()) return false;
-          if (this.query.sex == '') {
-            this.verification.sex = '性别不能为空';
-            return false;
+        if (!this.VerifyCellFullName()) return false;
+        if (!this.VerifyCellMobile()) return false;
+        if (!this.VerifyCellParentIdentity()) return false;
+        this.$http('/outlets/insertSubscribe', this.query).then(res => {
+          if (res.code == 200) {
+            this.$toast.success(res.msg);
+            this.$router.push({path:'/networkDetail',query:{olsId:this.query.olsId }})
+          } else if (code == 500) {
+            this.$toast.fail(res.msg);
           }
-          if (!this.VerifyCellBirthday()) return false;
-          this.$http('/outlets/insertSubscribe', this.query).then(res => {
-            if (res.code == 200) {
-              this.$toast.success(res.msg);
-              this.$router.go(-1)
-            } else if (code == 500) {
-              this.$toast.fail(res.msg);
-            }
-          })
-        
+        })
+
       },
       //验证姓名
       VerifyCellFullName() {
+        this.query.fullname = this.query.fullname.replace(/[ ]/g, "").replace(/[\r\n]/g, "").replace(/\u2006/g, "")
         if (this.query.fullname == '') {
           this.verification.fullname = '姓名不能为空';
           return false;
@@ -93,6 +106,8 @@
 
       //验证手机号
       VerifyCellMobile() {
+        this.query.mobile = this.query.mobile.replace(/[ ]/g, "").replace(/[\r\n]/g, "").replace(/\u2006/g, "")
+
         if (this.query.mobile == '') {
           this.verification.mobile = '手机号不能为空';
           return false;
@@ -104,13 +119,13 @@
           return true;
         }
       },
-      //验证生日
-      VerifyCellBirthday() {
-        if (this.query.birthday == '') {
-          this.verification.birthday = '宝宝生日不能为空';
+      //家长身份
+      VerifyCellParentIdentity() {
+        if (this.query.parentIdentity == '') {
+          this.verification.parentIdentity = '家长身份不能为空';
           return false;
         } else {
-          this.verification.birthday = '';
+          this.verification.parentIdentity = '';
           return true;
         }
       },

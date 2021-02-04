@@ -4,7 +4,6 @@
 			<div slot="center">员工管理</div>
 			<div slot="right" class="navbar-right" @click="$router.push('/invite')">邀请</div>
 		</NavBar>
-
 		<div class="item" v-for="item in list" :key="item.staId">
 			<div class="item-content">
 				<div class="item-head"><img :src="item.headportrait" alt=""></div>
@@ -33,7 +32,7 @@
 		<div v-if="isEmpty==1" style="position: fixed;top: 50%;left: 50%;transform: translate(-50%,-50%);">
 			<img src="~assets/img/empty.png" alt="">
 		</div>
-		<div v-if="isEmpty==2" style="text-align: center;color: #aaa;font-size: 14px;padding: 10px">暂无更多数据</div>
+		<div v-if="isEmpty==2" style="text-align: center;color: #aaa;font-size: 14px;padding: 20px">暂无更多数据</div>
 	
 		<PopUp :show="show">
 			<div slot="title">权限管理</div>

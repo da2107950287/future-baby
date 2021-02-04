@@ -2,7 +2,7 @@
   <div class="home">
     <header>
       <img :src="logo" alt="">
-      <div>{{mobile}}</div>
+      <div @click="call">{{mobile}}</div>
     </header>
     <!-- 轮播图 -->
     <div class="swiper-container my-swipe ">
@@ -25,14 +25,20 @@
       color="#FF5246">
       <van-tab v-for="item in tabs" :key="item.name" :title="item.title" :name="item.name">
         <van-pull-refresh v-model="isLoading" @refresh="onRefresh">
-          <van-list v-model="loading" :finished="finished" finished-text="暂无更多数据">
+          <van-list @load="handleScroll" v-model="loading" :finished="finished" finished-text="">
             <div class="rec-box">
               <div class="item" v-for="item in list" @click=" $router.push({path:'/details',query:{oflId:item.oflId}})">
-                <img :src="item.purl" alt="">
+                <img :src="item.purl" alt="" lazy-load>
                 <div class="dec">{{item.title}}</div>
                 <div class="label">{{item.labels}}</div>
               </div>
             </div>
+            <slot name="finished">
+              <div v-if="isEmpty==1" style="position: fixed;top: 70%;left: 50%;transform: translate(-50%,-50%);">
+                <img src="../../assets/img/empty.png" alt="">
+              </div>
+              <div v-if="isEmpty==2" style="text-align: center;color: #aaa;font-size: 14px;padding: 10px">暂无更多数据</div>
+            </slot>
           </van-list>
         </van-pull-refresh>
       </van-tab>
@@ -65,16 +71,20 @@
         loading: false,// 是否处于加载状态
         finished: false,// 是否已加载完成
         config: {},
+        isEmpty: 0,
         tabs: [
-          { title: "品牌介绍", name: "1" },
-          { title: "育儿知识", name: "2" },
-          { title: "创业社区", name: "3" },
-          { title: "每日课程", name: "4" },
+          { title: "新闻", name: "1" },
+          { title: "品牌", name: "2" },
+          { title: "课程", name: "3" },
+          { title: "育儿", name: "4" },
+          { title: "创业", name: "4.1" },
+
         ]
       }
     },
     watch: {
       activeName() {
+        this.isEmpty = 0
         this.finished = false;
         this.PageNumber = 1;
         this.list = [];
@@ -91,6 +101,10 @@
 
     },
     methods: {
+      //电话咨询
+      call() {
+        window.location.href = `tel://${this.mobile}`;
+      },
       //获取定位
       getAppConfig() {
         this.$http('/userinfo/getConfig', {
@@ -170,6 +184,7 @@
       },
       //下拉刷新
       onRefresh() {
+        this.isEmpty = 0;
         this.PageNumber = 1;
         this.finished = false;
         this.isLoading = false;
@@ -189,51 +204,47 @@
             this.clock = 1;
             this.loading = false;
             this.list = res.data;
-            if (this.PageSize == res.data.length) {
-              window.addEventListener("scroll", this.handleScroll)
-            } else {
+            if (this.PageSize != res.data.length) {
+              if (res.data.length == 0) {
+                this.isEmpty = 1;
+              } else {
+                this.isEmpty = 2;
+              }
               this.finished = true;
             }
+
           }
         })
       },
       //瀑布流加载
       handleScroll() {
-        //变量scrollTop是滚动条滚动时，距离顶部的距离
-        var scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop;
-        //变量windowHeight是可视区的高度
-        var clientHeight = document.documentElement.clientHeight || document.body.clientHeight;
-        //变量scrollHeight是滚动条的总高度
-        var scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight;
-        //滚动到底部条件
-        if ((scrollTop + clientHeight) > (scrollHeight - 50)) {
-          if (this.clock == 1) {
-            this.clock = 2;
-            this.PageNumber++;
-            this.loading = true
-            this.$http('/official/getOfficial', {
-              oflType: 1,
-              oflSort: this.activeName,
-              PageNumber: this.PageNumber,
-              PageSize: this.PageSize
-            }).then(res => {
-              if (res.code == 200) {
-                this.clock = 1;
-                this.loading = false;
-                this.list = [...this.list, ...res.data];
-                if (this.PageSize > res.data.length) {
-                  this.finished = true;
-                  window.removeEventListener("scroll", this.handleScroll)
-                }
+
+        if (this.clock == 1) {
+          this.clock = 2;
+          this.PageNumber++;
+          this.loading = true
+          this.$http('/official/getOfficial', {
+            oflType: 1,
+            oflSort: this.activeName,
+            PageNumber: this.PageNumber,
+            PageSize: this.PageSize
+          }).then(res => {
+            if (res.code == 200) {
+              this.clock = 1;
+              this.loading = false;
+              this.list = [...this.list, ...res.data];
+              if (this.PageSize > res.data.length) {
+
+                this.isEmpty = 2;
+                this.finished = true;
               }
-            })
-          }
+            }
+          })
         }
+
       }
     },
-    beforeDestroy() {
-      window.removeEventListener("scroll", this.handleScroll)
-    },
+
     components: {
       MainTabBar,
     }

@@ -5,22 +5,23 @@
 		</NavBar>
 		<div>
 			<van-pull-refresh v-model="isLoading" @refresh="onRefresh">
-        <van-list v-model="loading" :finished="finished" finished-text="">
-			<div v-for="item in list" :key="item.oflId" @click="$router.push({path:'/details',query:{oflId:item.oflId}})"
-				class="item">
-				<div class="cover"><img :src="item.purl" alt=""></div>
-				<div class="content">
-					<div class="title">{{item.title}}</div>
-					<div class="date">{{item.oflTime}}</div>
-				</div>
-			</div>
-		</van-list>
-	</van-pull-refresh>
-			<div v-if="isEmpty==1" style="position: fixed;top: 50%;left: 50%;transform: translate(-50%,-50%);">
-        <img src="~assets/img/empty.png" alt="">
-      </div>
-      <div v-if="isEmpty==2" style="text-align: center;color: #aaa;font-size: 14px;padding: 10px">暂无更多数据</div>
-   
+				<van-list class="tab-list" @load="handleScroll" v-model="loading" :finished="finished" finished-text="">
+					<div v-for="item in list" :key="item.oflId" @click="$router.push({path:'/details',query:{oflId:item.oflId}})"
+						class="item">
+						<div class="cover"><img :src="item.purl" alt=""></div>
+						<div class="content">
+							<div class="title">{{item.title}}</div>
+							<div class="date">{{item.oflTime}}</div>
+						</div>
+					</div>
+					<div v-if="isEmpty==1" style="position: fixed;top: 50%;left: 50%;transform: translate(-50%,-50%);">
+						<img src="~assets/img/empty.png" alt="">
+					</div>
+					<div v-if="isEmpty==2" style="text-align: center;color: #aaa;font-size: 14px;padding: 10px">暂无更多数据</div>
+
+				</van-list>
+			</van-pull-refresh>
+
 		</div>
 	</div>
 </template>
@@ -34,8 +35,8 @@
 				list: [],//教案列表
 				isEmpty: 0,
 				isLoading: false,// 是否处于加载中状态
-        loading: false,// 是否处于加载状态
-        finished: false,// 是否已加载完成
+				loading: false,// 是否处于加载状态
+				finished: false,// 是否已加载完成
 			}
 		},
 		created() {
@@ -44,24 +45,22 @@
 		methods: {
 			//获取教案列表
 			getOfficial() {
-				this.loading=true;
+				this.loading = true;
 				this.$http('/official/getOfficial', {
 					oflSort: 8,
 					oflType: 3,
-					PageNumber: this.PageNumber,
+					PageNumber: this.PageNumber++,
 					PageSize: this.PageSize
 				}).then(res => {
 					if (res.code == 200) {
-						this.loading=false
+						this.loading = false
 						this.clock = 1;
 						this.list = res.data;
-						if (this.PageSize == res.data) {
-							window.addEventListener("scroll", this.handleScroll)
-						} else {
+						if (this.PageSize != res.data.length) {
 							if (res.data.length == 0) {
 								this.isEmpty = 1;
 							} else {
-								this.isEmpty = 2
+								this.isEmpty = 2;
 							}
 							this.finished = true;
 						}
@@ -81,7 +80,7 @@
 					if (this.clock == 1) {
 						this.clock = 2;
 						this.PageNumber++;
-						this.loading=true
+						this.loading = true
 						this.$http('/official/getOfficial', {
 							oflSort: 8,
 							oflType: 3,
@@ -89,28 +88,30 @@
 							PageSize: this.PageSize
 						}).then(res => {
 							if (res.code == 200) {
-								this.loading=false;
+								this.loading = false;
 								this.clock = 1;
-								this.isEmpty = 2;
+
 								this.list = [...this.list, ...res.data];
 								if (this.PageSize > res.data.length) {
-									this.finished=true;
-									window.removeEventListener("scroll", this.handleScroll)
+									this.isEmpty = 2
+									this.finished = true;
+
 								}
 							}
 						})
 					}
 				}
 			},
-  //下拉刷新
-	onRefresh() {
-        this.PageNumber = 1;
-        this.isEmpty=0;
-        this.finished = false;
-        this.isLoading = false;
-        this.list = [];
-        this.getOfficial();
-      },
+
+			//下拉刷新
+			onRefresh() {
+				this.PageNumber = 1;
+				this.isEmpty = 0;
+				this.finished = false;
+				this.isLoading = false;
+				this.list = [];
+				this.getOfficial();
+			},
 		},
 		beforeDestroy() {
 			window.removeEventListener("scroll", this.handleScroll)
@@ -127,6 +128,10 @@
 <style lang="scss" scoped>
 	@import '~assets/css/mixin.scss';
 
+	.tab-list {
+		height: calc(100vh - 44px);
+		overflow-y: scroll
+	}
 
 
 	.item {

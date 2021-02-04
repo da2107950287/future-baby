@@ -6,7 +6,7 @@
     <div class="content">
 
       <van-pull-refresh v-model="isLoading" @refresh="onRefresh">
-        <van-list v-model="loading" :finished="finished" finished-text="">
+        <van-list class="tab-list" @load="handleScroll" v-model="loading" :finished="finished" finished-text="">
           <div class="item" v-for="item in list" :key="item.dtnId">
             <div class="color3">月度课程名称：{{item.courseName}}</div>
             <div class="colora font65">生成时间：{{item.createTime | formatTime1}}</div>
@@ -19,12 +19,12 @@
               <div :class="item.uid!=''?'active1':''" class="arrow"></div>
             </div>
           </div>
+          <div v-if="isEmpty==1" style="position: fixed;top: 50%;left: 50%;transform: translate(-50%,-50%);">
+            <img src="~assets/img/empty.png" alt="">
+          </div>
+          <div v-if="isEmpty==2" style="text-align: center;color: #aaa;font-size: 14px;padding: 10px">暂无更多数据</div>
         </van-list>
       </van-pull-refresh>
-      <div v-if="isEmpty==1" style="position: fixed;top: 50%;left: 50%;transform: translate(-50%,-50%);">
-        <img src="~assets/img/empty.png" alt="">
-      </div>
-      <div v-if="isEmpty==2" style="text-align: center;color: #aaa;font-size: 14px;padding: 10px">暂无更多数据</div>
     </div>
     <div class="fixed" @click="$router.push({path:'/voucher',query:{olsId:$route.query.olsId}})">创建优惠券</div>
   </div>
@@ -67,30 +67,20 @@
         }).then(res => {
           this.clock = 1;
           this.loading = false;
-          this.list = res.data;
-          if (this.PageSize == res.data.length) {
-            window.addEventListener("scroll", this.handleScroll)
-          } else {
+          this.list = [...this.list,...res.data];
+          if (this.PageSize != res.data.length) {
             if (res.data.length == 0) {
               this.isEmpty = 1;
             } else {
-              this.isEmpty = 2
+              this.isEmpty = 2;
             }
             this.finished = true;
           }
         })
       },
-      //瀑布流加载
+      // //瀑布流加载
       handleScroll() {
-        //变量scrollTop是滚动条滚动时，距离顶部的距离
-        var scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop;
-        //变量windowHeight是可视区的高度
-        var clientHeight = document.documentElement.clientHeight || document.body.clientHeight;
-        //变量scrollHeight是滚动条的总高度
-        var scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight;
-        //滚动到底部条件
-        if ((scrollTop + clientHeight) > (scrollHeight - 50)) {
-          if (this.clock == 1) {
+      if (this.clock == 1) {
             this.clock = 2;
             this.PageNumber++;
             this.loading = true
@@ -107,18 +97,18 @@
                 if (this.PageSize > res.data.length) {
                   this.isEmpty = 2;
                   this.finished = true;
-                  window.removeEventListener("scroll", this.handleScroll)
                 }
               }
             })
           }
-        }
       },
+      
       //下拉刷新
       onRefresh() {
         this.PageNumber = 1;
         this.finished = false;
         this.isLoading = false;
+        this.isEmpty = 0;
         this.list = [];
         this.getDeduction();
       },
@@ -130,6 +120,11 @@
 </script>
 <style lang="scss" scoped>
   @import '~assets/css/mixin.scss';
+
+  .tab-list {
+    height: calc(100vh - 44px);
+    overflow-y: scroll
+  }
 
   .vouch_list {
     height: 100%;
@@ -153,7 +148,7 @@
   .content {
     height: auto;
     background: #F7F7F7;
-    padding: .5rem 1rem;
+    padding: 0.5rem 1rem 0;
     margin-bottom: 44px;
     min-height: calc(100% - 44px);
 

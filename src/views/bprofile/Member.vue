@@ -4,11 +4,12 @@
       <div slot="center">会员管理</div>
     </NavBar>
     <div class="order-list">
-      <van-tabs :sticky="true" v-model="activeName" line-height="2px" title-active-color="#FF5246" title-inactive-color="#333"
-        color="#FF5246" >
-        <van-tab  v-for="item in tabs" :key="item.name" :title="item.title" :name="item.name">
+      <van-tabs  v-model="activeName" line-height="2px" title-active-color="#FF5246"
+        title-inactive-color="#333" color="#FF5246">
+        <van-tab v-for="item in tabs" :key="item.name" :title="item.title" :name="item.name">
+         
           <van-pull-refresh v-model="isLoading" @refresh="onRefresh">
-            <van-list v-model="loading" :finished="finished" finished-text="" @load="handleScroll">
+            <van-list class="tab-list" v-model="loading" :finished="finished" finished-text="" @load="handleScroll">
               <div class="total">
                 <div class="total-left">
                   <span>共<b> {{memberNumber}} </b>名会员</span>
@@ -16,12 +17,12 @@
                 <!-- <img class="total-right" src="../../assets/img/icon_clen.png" alt=""> -->
               </div>
               <Member v-for="item1 in list" :item="item1" :key="item1.mebId"></Member>
+              <div v-if="isEmpty==1" style="position: fixed;top: 50%;left: 50%;transform: translate(-50%,-50%);">
+                <img src="~assets/img/empty.png" alt="">
+              </div>
+              <div v-if="isEmpty==2" style="text-align: center;color: #aaa;font-size: 14px;padding: 10px">暂无更多数据</div>
             </van-list>
           </van-pull-refresh>
-          <div v-if="isEmpty==1" style="position: fixed;top: 50%;left: 50%;transform: translate(-50%,-50%);">
-            <img src="~assets/img/empty.png" alt="">
-          </div>
-          <div v-if="isEmpty==2" style="text-align: center;color: #aaa;font-size: 14px;padding: 10px">暂无更多数据</div>
 
         </van-tab>
       </van-tabs>
@@ -60,7 +61,7 @@
     },
     watch: {
       activeName() {
-        this.isEmpty=0;
+        this.isEmpty = 0;
         this.finished = false;
         this.PageNumber = 1;
         this.list = [];
@@ -78,7 +79,7 @@
         this.finished = false;
         this.isLoading = false;
         this.list = [];
-        this.getOfficial();
+        this.getMember();
       },
       //获取数据
       getMember() {
@@ -93,9 +94,8 @@
             this.clock = 1;
             this.loading = false;
             this.list = res.data.member;
-            this.memberNumber = res.data.memberNumber
+            this.memberNumber = res.data.memberNumber;
             if (this.PageSize != res.data.member.length) {
-            
               if (res.data.member.length == 0) {
                 this.isEmpty = 1;
               } else {
@@ -127,7 +127,7 @@
               PageSize: this.PageSize
             }).then(res => {
               if (res.code == 200) {
-               
+
                 this.clock = 1;
                 this.loading = false;
                 this.memberNumber = res.data.memberNumber
@@ -135,7 +135,7 @@
                 if (this.PageSize > res.data.member.length) {
                   this.isEmpty = 2;
                   this.finished = true;
-             
+
                 }
               }
             })
@@ -153,6 +153,18 @@
 </script>
 <style lang="scss" scoped>
   @import '~assets/css/mixin.scss';
+
+  /deep/ .van-tabs {
+    position: fixed;
+    top: 44px;
+    width: 100%;
+
+  }
+
+  .tab-list {
+    height: calc(100vh - 88px);
+    overflow-y: scroll
+  }
 
   .c-order {
     @include wh(100%, 100%);
@@ -186,8 +198,7 @@
   }
 
   .order-list {
-    height: 100%;
-    overflow-y: scroll;
+    height: calc(100vh - 44px);
     background: #F7F7F7;
   }
 </style>

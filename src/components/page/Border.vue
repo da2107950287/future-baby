@@ -193,7 +193,7 @@
 
 	.item-card {
 		width: 100%;
-		height: 45px;
+		/* height: 45px; */
 		display: flex;
 		flex-direction: row;
 		justify-content: space-between;

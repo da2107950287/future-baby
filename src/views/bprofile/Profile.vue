@@ -46,7 +46,7 @@
 						<div class="pointer"><i class="right"></i></div>
 					</div>
 				</div>
-				<div class="list-content">
+				<!-- <div class="list-content">
 					<div @click="$router.push({path:'/border',query:{olsId:info.olsId,activeName:'4'}})">
 						<div class="icon"><img src="~assets/img/bprofile/icon_wwc.png" alt=""></div>
 						<div>未付款</div>
@@ -64,7 +64,7 @@
 						<div class="icon"><img src="~assets/img/bprofile/icon_gq.png" alt=""></div>
 						<div>已过期</div>
 					</div>
-				</div>
+				</div> -->
 			</div>
 			<div v-if="role==2 || role==4"  class="list">
 				<div class="list-title">
@@ -349,7 +349,7 @@
 
 	.list {
 		width: 100%;
-		height: 134px;
+		/* height: 134px; */
 		background: #FFFFFF;
 		box-shadow: 0px 2px 4px 0px rgba(230, 230, 230, 0.4);
 		border-radius: 10px;

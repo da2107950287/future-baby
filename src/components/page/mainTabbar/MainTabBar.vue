@@ -3,13 +3,13 @@
     <tab-bar-item link="/home">
       <img slot="icon" src="~assets/img/home/gx.png" alt="">
       <img slot="active-icon" src="~assets/img/home/gx_a.png" alt="">
-      <div slot="text">官宣</div>
+      <div slot="text">首页</div>
     </tab-bar-item>
-    <tab-bar-item link="/babyHouse">
+    <!-- <tab-bar-item link="/babyHouse">
       <img slot="icon" src="~assets/img/home/bbzj.png" alt="">
       <img slot="active-icon" src="~assets/img/home/bbzj_a.png" alt="">
       <div slot="text">宝贝之家</div>
-    </tab-bar-item>
+    </tab-bar-item> -->
     <tab-bar-item link="/outlets">
       <img slot="icon" src="~assets/img/home/wd.png" alt="">
       <img slot="active-icon" src="~assets/img/home/wd_a.png" alt="">
@@ -18,7 +18,7 @@
     <tab-bar-item link="/community">
       <img slot="icon" src="~assets/img/home/cyzx.png" alt="">
       <img slot="active-icon" src="~assets/img/home/cyzx_a.png" alt="">
-      <div slot="text">创业中心</div>
+      <div slot="text">创业</div>
     </tab-bar-item>
     <tab-bar-item  :link="link">
       <img slot="icon" src="~assets/img/home/my.png" alt="">

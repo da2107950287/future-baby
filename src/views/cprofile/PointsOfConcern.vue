@@ -5,8 +5,8 @@
 
     </NavBar>
     <div class="content">
-      <van-pull-refresh v-model="isLoading" @refresh="onRefresh">
-        <van-list v-model="loading" :finished="finished" finished-text="">
+      <van-pull-refresh class="list" v-model="isLoading" @refresh="onRefresh">
+        <van-list @load="handleScroll" v-model="loading" :finished="finished" finished-text="">
 
           <div class="item" v-for="(item,index) in list" :key="item.olsId">
             <div class="item-top">
@@ -26,13 +26,14 @@
               <div class="tel">{{item.mobile}}</div>
             </div>
           </div>
+          <div v-if="isEmpty==1" style="position: fixed;top: 50%;left: 50%;transform: translate(-50%,-50%);">
+            <img src="../../assets/img/empty.png" alt="">
+          </div>
+          <div v-if="isEmpty==2" style="text-align: center;color: #aaa;font-size: 14px;padding: 10px">暂无更多数据</div>
+
+
         </van-list>
       </van-pull-refresh>
-      <div v-if="isEmpty==1" style="position: fixed;top: 50%;left: 50%;transform: translate(-50%,-50%);">
-        <img src="../../assets/img/empty.png" alt="">
-      </div>
-      <div v-if="isEmpty==2" style="text-align: center;color: #aaa;font-size: 14px;padding: 10px">暂无更多数据</div>
-
 
     </div>
   </div>
@@ -65,11 +66,8 @@
         }).then(res => {
           this.clock = 1;
           this.loading = false;
-
           this.list = res.data;
-          if (this.PageSize == res.data.length) {
-            window.addEventListener("scroll", this.handleScroll)
-          } else {
+          if (this.PageSize != res.data.length) {
             if (res.data.length == 0) {
               this.isEmpty = 1;
             } else {
@@ -77,6 +75,7 @@
             }
             this.finished = true;
           }
+
         })
       },
       //下拉刷新
@@ -90,36 +89,27 @@
       },
       //瀑布流加载
       handleScroll() {
-        //变量scrollTop是滚动条滚动时，距离顶部的距离
-        var scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop;
-        //变量windowHeight是可视区的高度
-        var clientHeight = document.documentElement.clientHeight || document.body.clientHeight;
-        //变量scrollHeight是滚动条的总高度
-        var scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight;
-        //滚动到底部条件
-        if ((scrollTop + clientHeight) > (scrollHeight - 50)) {
-          if (this.clock == 1) {
-            this.clock = 2;
-            this.PageNumber++;
-            this.loading = true;
-            this.$http('/outlets/getOutletsFollow', {
-              PageNumber: this.PageNumber,
-              PageSize: this.PageSize
-            }).then(res => {
-              if (res.code == 200) {
-                this.$toast.clear();
-                this.list = [...this.list, ...res.data];
-                this.clock = 1;
-                this.loading = false;
-                if (this.PageSize > res.data.length) {
-                  this.isEmpty = 2;
-                  this.finished = true;
-                  window.removeEventListener('scroll', this.handleScroll)
-                }
+        if (this.clock == 1) {
+          this.clock = 2;
+          this.PageNumber++;
+          this.loading = true;
+          this.$http('/outlets/getOutletsFollow', {
+            PageNumber: this.PageNumber,
+            PageSize: this.PageSize
+          }).then(res => {
+            if (res.code == 200) {
+              this.$toast.clear();
+              this.list = [...this.list, ...res.data];
+              this.clock = 1;
+              this.loading = false;
+              if (this.PageSize > res.data.length) {
+                this.isEmpty = 2;
+                this.finished = true;
               }
-            })
-          }
+            }
+          })
         }
+
       },
       setOutletsFollow(olsId, index) {
         Dialog.confirm({
@@ -154,8 +144,20 @@
 <style lang="scss" scoped>
   @import '~assets/css/mixin.scss';
 
+  .account-detail {
+    height: 100%;
+  }
+
+  .list {
+    height: 100%;
+    overflow-y: scroll;
+  }
+
   .content {
     padding: 0 1rem;
+
+    height: calc(100% - 44px);
+    overflow-y: scroll;
 
     .item {
       border-bottom: 1px solid #eee;

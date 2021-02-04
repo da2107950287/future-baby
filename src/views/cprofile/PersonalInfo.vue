@@ -17,10 +17,11 @@
             @cancel="showCalendar = false" />
         </van-popup> -->
 
-        <van-field readonly is-link required name="datetimePicker" :value="query.birthday" label="生日" placeholder="请选择您的生日"
-          @click="showCalendar = true" />
+        <van-field readonly is-link required name="datetimePicker" :value="query.birthday" label="生日"
+          placeholder="请选择您的生日" @click="showCalendar = true" />
         <van-popup v-model="showCalendar" position="bottom">
-          <van-datetime-picker v-model="currentDate" type="date" :minDate="minDate" @confirm="onConfirm" @cancel="showCalendar = false" />
+          <van-datetime-picker v-model="currentDate" type="date" :minDate="minDate" @confirm="onConfirm"
+            @cancel="showCalendar = false" />
         </van-popup>
 
         <van-field name="radio" label="性别" required>
@@ -66,7 +67,7 @@
   export default {
     data() {
       return {
-        minDate: new Date(1970,0,1),
+        minDate: new Date(1970, 0, 1),
         showCalendar: false,//是否显示日历
         showPicker: false,//是否显示城市列表
         provinceId: "",//省份ID
@@ -78,6 +79,8 @@
           city: "",	//城市
           address: "",//地址
           birthday: "",//生日
+          province:'',
+          city:''
         },
         verification: {
           nickname: "",//名称（网点名称）
@@ -96,6 +99,7 @@
         return `${this.query.province}${this.query.city}` || '';
       }
     },
+
     created() {
       this.showUserinfo();
       this.provinceList = chineseLetter(this.objToArr(86), 'value');
@@ -167,6 +171,8 @@
       },
       //验证昵称
       VerifyCellNickname() {
+        this.query.nickname = this.query.nickname.replace(/[ ]/g, "").replace(/[\r\n]/g, "").replace(/\u2006/g, "")
+
         if (this.query.nickname == '') {
           this.verification.nickname = '昵称不能为空';
           return false;
@@ -177,6 +183,8 @@
       },
       //验证手机号
       VerifyCellMobile() {
+        this.query.account = this.query.account.replace(/[ ]/g, "").replace(/[\r\n]/g, "").replace(/\u2006/g, "")
+
         if (this.query.account == '') {
           this.verification.account = '手机号不能为空';
           return false;
@@ -210,6 +218,7 @@
       },
       //验证详细地址
       VerifyCellAddress() {
+        this.query.address = this.query.address.replace(/[ ]/g, "").replace(/[\r\n]/g, "").replace(/\u2006/g, "")
         if (this.query.address == '') {
           this.verification.address = '详细地址不能为空';
           return false;

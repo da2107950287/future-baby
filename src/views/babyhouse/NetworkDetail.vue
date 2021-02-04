@@ -14,7 +14,7 @@
         </NetworkIntro>
         <div style="height:1px;background: #eee;"></div>
         <div class="qrcode">
-          <div class="left-text">网点扫码</div>
+          <div class="left-text">网点二维码</div>
           <div class="right" @click="show=true">
             <span class="right-text">点击获取</span>
             <span class="iconfont icon-erweima icon"></span>
@@ -24,7 +24,7 @@
       <div class="blank"></div>
       <div class="center">
         <Card :card="info.commodityEntity" :olsId="olsId"></Card>
-        <div class="intro">
+        <!-- <div class="intro">
           <div class="title">园区介绍</div>
           <div class="intro-info">{{info.intro}}</div>
         </div>
@@ -42,7 +42,7 @@
           </div>
           <div>
           </div>
-        </div>
+        </div> -->
       </div>
       <div class="wrap">
         <div class="bottom">
@@ -430,8 +430,9 @@
           }
 
           .icon {
-            color: #aaa;
+            color: #FF8327;
             margin-left: .45rem;
+
           }
         }
       }
@@ -448,7 +449,7 @@
     }
 
     .center {
-      padding: .95rem 1rem 0;
+      padding: .95rem 1rem 0.95rem;
 
 
 
@@ -526,11 +527,13 @@
 
           span {
             @include sc(.65rem, #aaa);
+          
           }
 
           span.icon {
             font-size: .9rem;
             margin-right: .25rem;
+           
           }
         }
 

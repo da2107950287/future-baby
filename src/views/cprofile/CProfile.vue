@@ -13,11 +13,13 @@
     </div>
     <div class="card" v-for="item in list" :key="item.mebId">
       <div class="card-left">
-        <div>
+       {{item.olsName}}
+
+        <!-- <div>
           <span class="name">{{item.olsName}}</span>
           <span class="status">在学</span>
         </div>
-        <div class="date">有效期：{{item.endTime | formatTime}}</div>
+        <div class="date">有效期：{{item.endTime | formatTime}}</div> -->
       </div>
       <div class="card-right" @click="$router.push({path:'/orderPayment',query:{olsId:item.olsId}})">续费</div>
     </div>
@@ -29,7 +31,7 @@
           <div class="iconfont icon-fanhui2"></div>
         </div>
       </div>
-      <div class="items">
+      <!-- <div class="items">
         <div class="item" @click="$router.push({path:'/corder',query:{activeName:'4'}})">
           <img src="~assets/img/cprofile/icon_wwc.png" alt="">
           <div>未付款</div>
@@ -47,7 +49,7 @@
           <img src="~assets/img/cprofile/icon_shixiao.png" alt="">
           <div>失效订单</div>
         </div>
-      </div>
+      </div> -->
     </div>
     <van-swipe class="my-swipe activity" :autoplay="3000" indicator-color="white">
       <van-swipe-item v-for="item in banners" :key="item.banId"
@@ -67,29 +69,6 @@
         </div>
         <div>关注网点</div>
       </div>
-      <div class="item1" @click="$router.push('/cVouchers')">
-
-        <div class="img-box">
-          <img src="~assets/img/cprofile/icon_quan.png" alt="">
-
-        </div>
-        <div>抵扣券</div>
-      </div>
-      <div class="item1" @click="$router.push('/MyCollection')">
-        <div class="img-box">
-          <img src="~assets/img/cprofile/icon_collets.png" alt="">
-
-        </div>
-        <div>收藏</div>
-      </div>
-      <div class="item1" @click="$router.push('/onlineConsulting')">
-        <div class="img-box">
-          <img src="~assets/img/cprofile/icon_zix.png" alt="">
-
-
-        </div>
-        <div>在线咨询</div>
-      </div>
       <div class="item1" @click="$router.push('/aboutUs')">
         <div class="img-box">
           <img src="~assets/img/cprofile/icon_about_us.png" alt="">
@@ -97,6 +76,30 @@
         </div>
         <div>关于我们</div>
       </div>
+      <!-- <div class="item1" @click="$router.push('/cVouchers')">
+
+        <div class="img-box">
+          <img src="~assets/img/cprofile/icon_quan.png" alt="">
+
+        </div>
+        <div>抵扣券</div>
+      </div> -->
+      <!-- <div class="item1" @click="$router.push('/MyCollection')">
+        <div class="img-box">
+          <img src="~assets/img/cprofile/icon_collets.png" alt="">
+
+        </div>
+        <div>收藏</div>
+      </div> -->
+      <!-- <div class="item1" @click="$router.push('/onlineConsulting')">
+        <div class="img-box">
+          <img src="~assets/img/cprofile/icon_zix.png" alt="">
+
+
+        </div>
+        <div>在线咨询</div>
+      </div> -->
+
 
       <div class="item1" @click="$router.push('/setting')">
         <div class="img-box">
@@ -105,12 +108,12 @@
         </div>
         <div>设置</div>
       </div>
-      <div v-if="role==1" class="item1" @click="$router.push('/applyNetwork')">
+      <!-- <div v-if="role==1" class="item1" @click="$router.push('/applyNetwork')">
         <div class="img-box">
           <img src="~assets/img/cprofile/apply.png" alt="">
         </div>
         <div>申请商户</div>
-      </div>
+      </div> -->
     </div>
     <div v-if="role==2 || role==3 || role==4" style="padding: .5rem 5rem 1rem;">
       <van-button plain round block type="danger" @click="exchange">切换至商户端</van-button>
@@ -240,12 +243,21 @@
       @include fj();
       align-items: center;
       margin: 1.5rem 1rem 0;
-      padding: .8rem .85rem .8rem 1rem;
+      padding:.5rem 1rem ;
       background: #FFEFDB;
       border-radius: .5rem;
       border: .05rem solid #FFD3B0;
 
       .card-left {
+        font-weight: 500;
+        @include sc(.75rem, #8B7054);
+        font-family: PingFangSC-Semibold, PingFang SC;
+         overflow: hidden;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+      
+
         div:first-child {
           display: flex;
           align-items: center;
@@ -283,15 +295,16 @@
       }
 
       .card-right {
-        @include wh(2.5rem, 2.5rem);
-        @include sc(.65rem, #FFEFDB);
+        flex-shrink: 0;
+        @include wh(2.2rem, 2.2rem);
+        @include sc(.6rem, #FFEFDB);
         border-radius: 50%;
         text-align: center;
-        line-height: 2.5rem;
+        line-height: 2.2rem;
         background: #8B7154;
         box-shadow: 0rem 0.1rem 0.2rem 0rem #FFD7A5;
         font-family: PingFangSC-Semibold, PingFang SC;
-        font-weight: 600;
+        font-weight: 500;
       }
     }
 

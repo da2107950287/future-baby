@@ -2,17 +2,16 @@
   <div class="outlets">
     <header>
       <img :src="logo" alt="">
-      <div>{{mobile}}</div>
+      <div @click="call">{{mobile}}</div>
     </header>
     <div class="content">
-
       <van-swipe class="my-swipe cover" :autoplay="3000" indicator-color="white">
         <van-swipe-item v-for="item in banners" :key="item.banId"
           @click=" $router.push({path:'/details',query:{banId:item.banId}})">
           <img :src="item.purl" alt="">
         </van-swipe-item>
       </van-swipe>
-      <div>
+      <div class="outlets-box">
         <div class="outlets-title">
           <div class="title">全部网点</div>
           <div class="city-box" @click="showPicker=true">
@@ -22,7 +21,6 @@
             </span>
             <span class="iconfont icon-fanhui2 icon"></span>
           </div>
-
         </div>
         <van-action-sheet v-model="showPicker" title="请选择您所在城市">
           <div class="city-content">
@@ -59,10 +57,10 @@
             </div>
           </div>
         </van-action-sheet>
-        <van-pull-refresh v-model="isLoading" @refresh="onRefresh">
-          <van-list v-model="loading" :finished="finished" finished-text="暂无更多数据">
-            <div v-for="item in list" :key="item.olsId" class="item" @click="toNewworkDetail(item.state,item.olsId)">
-              <div class="item-top">
+        <van-pull-refresh class="tablist" v-model="isLoading" @refresh="onRefresh">
+          <van-list @load="handleScroll" v-model="loading" :finished="finished" finished-text="">
+            <div v-for="item in list" :key="item.olsId" class="item">
+              <div class="item-top" @click="toNewworkDetail(item.state,item.olsId)">
                 <div class="item-top-img">
                   <img :src="item.image" alt="">
                   <span v-if="item.state!=1" class="item-top-text">筹备中</span>
@@ -79,14 +77,32 @@
                 <span class="iconfont icon-weizhi icon"></span>
                 <div class="location">{{item.province}}{{item.city}}{{item.area}}{{item.address}}</div>
               </div>
-              <div class="icon-box">
-                <span class="iconfont icon-dianhua icon"></span>
-                <div v-if="item.mobile" class="tel">{{item.mobile}}</div>
-                <div v-else>暂无</div>
+              <div class="icon-box1">
+                <div class="icon-box">
+                  <span class="iconfont icon-dianhua icon"></span>
+                  <div v-if="item.mobile" class="tel">{{item.mobile}}</div>
+                  <div v-else>暂无</div>
+
+                </div>
+                <div class="audition"
+                  @click="$router.push({path:'/audition',query:{cover:item.image,olsId:item.olsId}})">预约试学</div>
               </div>
             </div>
+            <slot name="finished">
+
+              <div v-if="isEmpty==1" class="empty" style="position: fixed;top: 70%;left: 50%;transform: translate(-50%,-50%);">
+                <img class="img1" src="~assets/img/empty-logo.png" alt="">
+                <img class="img2" src="~assets/img/outlet.png" alt="">
+
+              </div>
+              <div v-if="isEmpty==2" class="more">
+                <span @click="$router.push('/community')">诚邀您加盟创业</span>
+              </div>
+            </slot>
+
           </van-list>
         </van-pull-refresh>
+
       </div>
     </div>
     <PopUp :show="showToast">
@@ -96,7 +112,6 @@
     </PopUp>
     <MainTabBar></MainTabBar>
     <div id='allmap'></div>
-
   </div>
   </div>
 </template>
@@ -114,6 +129,7 @@
         PageNumber: 1,//当前页数
         PageSize: 10,//每页显示多少条
         isShow: 1,
+        isEmpty: 0,//0初始值 1没有数据 2数据加载完成
         showPicker: false,//是否显示位置选择框
         showToast: false,//是否显示网点筹备中
         isLoading: false,// 是否处于加载中状态
@@ -132,10 +148,11 @@
         cities: ["北京", "上海", "杭州", "广州", "深圳", "南京", "成都", "天津", "武汉"],//热门城市
         mobile: "",//平台电话
         logo: "",//平台logo
+
       }
     },
     created() {
-      if (getStore('latitude') && getStore('longitude') && getStore('city') && getStore('province')) {
+      if (getStore('latitude') && getStore('longitude') && getStore('city')) {
         this.latitude = getStore('latitude');
         this.longitude = getStore('longitude');
         this.city = getStore('city');
@@ -157,6 +174,10 @@
 
     },
     methods: {
+        //电话咨询
+        call(){
+        window.location.href=`tel://${this.mobile}`;
+      },
       getAppConfig() {
         this.$http('/userinfo/getConfig', {
           url: window.location.href.split('#')[0]
@@ -221,6 +242,7 @@
       //   }, this.city)
       // },
       selectCity1(city) {
+        this.isEmpty=0;
         this.city = city;
         this.provinceId = ''
         this.province = '';
@@ -229,8 +251,8 @@
         this.PageNumber = 1;
         this.list = [];
         this.getOutlets();
-        setStore('province',this.province)
-        setStore('city',this.city)
+        setStore('province', this.province)
+        setStore('city', this.city)
 
         // this.getPoint();
 
@@ -243,8 +265,8 @@
         this.PageNumber = 1;
         this.list = [];
         this.getOutlets()
-        setStore('province',this.province)
-        setStore('city',this.city)
+        setStore('province', this.province)
+        setStore('city', this.city)
 
         // this.getPoint();
 
@@ -290,9 +312,12 @@
             this.clock = 1;
             this.loading = false;
             this.list = res.data;
-            if (this.PageSize == res.data.length) {
-              window.addEventListener("scroll", this.handleScroll)
-            } else {
+            if (this.PageSize != res.data.length) {
+              if (res.data.length == 0) {
+                this.isEmpty = 1;
+              } else {
+                this.isEmpty = 2;
+              }
               this.finished = true;
             }
           }
@@ -300,40 +325,33 @@
       },
       //瀑布流加载
       handleScroll() {
-        //变量scrollTop是滚动条滚动时，距离顶部的距离
-        var scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop;
-        //变量windowHeight是可视区的高度
-        var clientHeight = document.documentElement.clientHeight || document.body.clientHeight;
-        //变量scrollHeight是滚动条的总高度
-        var scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight;
-        //滚动到底部条件
-        if ((scrollTop + clientHeight) > (scrollHeight - 50)) {
-          if (this.clock == 1) {
-            this.clock = 2;
-            this.PageNumber++;
-            this.loading = true;
-            this.$http('/outlets/getOutlets', {
-              latitude: this.latitude,
-              longitude: this.longitude,
-              city: this.city,
-              PageNumber: this.PageNumber,
-              PageSize: this.PageSize,
-            }).then(res => {
-              if (res.code == 200) {
-                this.clock = 1;
-                this.loading = false;
-                this.list = [...this.list, ...res.data];
-                if (res.data.length < this.PageSize) {
-                  this.finished = true;
-                  window.removeEventListener("scroll", this.handleScroll);
-                }
+
+        if (this.clock == 1) {
+          this.clock = 2;
+          this.PageNumber++;
+          this.loading = true;
+          this.$http('/outlets/getOutlets', {
+            latitude: this.latitude,
+            longitude: this.longitude,
+            city: this.city,
+            PageNumber: this.PageNumber,
+            PageSize: this.PageSize,
+          }).then(res => {
+            if (res.code == 200) {
+              this.clock = 1;
+              this.loading = false;
+              this.list = [...this.list, ...res.data];
+              if (this.PageSize > res.data.length) {
+                this.isEmpty = 2;
+                this.finished = true;
               }
-            })
-          }
+            }
+          })
         }
       },
       //下拉刷新
       onRefresh() {
+        this.isEmpty = 0;
         this.PageNumber = 1;
         this.finished = false;
         this.isLoading = false;
@@ -348,9 +366,6 @@
         }
       }
     },
-    beforeDestroy() {
-      window.removeEventListener("scroll", this.handleScroll)
-    },
     components: {
       LogoTel,
       MainTabBar,
@@ -362,10 +377,63 @@
 <style lang="scss" scoped>
   @import '~assets/css/mixin.scss';
 
+ 
+
+  .empty {
+  
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    .img1 {
+
+      width: 5rem;
+
+    }
+
+    .img2 {
+
+      margin-top: .75rem;
+      height: 3.3rem;
+   
+    }
+  }
+
+  .icon-box1 {
+    display: flex;
+    justify-content: space-between;
+    align-items: center
+  }
+
+  .audition {
+    @include wh(3rem, 1rem);
+    text-align: center;
+    line-height: 1rem;
+    font-size: .4rem;
+    color: #fff;
+    background: linear-gradient(to bottom right, #FA7677, #F24142);
+    border-radius: 2rem
+  }
+
+  .more {
+
+
+    @include sc(.6rem, #F24142);
+    text-align: center;
+    margin: 1rem 0;
+
+    span {
+      border-bottom: 2px solid #FF5246;
+    }
+
+  }
+
   header {
     @include wh(100%, 4.5rem);
     @include fj();
-    @include font(.75rem, 1.05rem) padding: .75rem;
+    @include font(.75rem, 1.05rem);
+    padding: .75rem;
     font-weight: 600;
     color: $fc;
     background-color: #F24142;
@@ -375,6 +443,7 @@
       @include wh(4.7rem, 1.5rem)
     }
   }
+
 
   .btn {
     @include wh(10.5rem, 2rem);
