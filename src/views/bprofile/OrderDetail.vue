@@ -16,13 +16,14 @@
             <!-- <div class="top-info-intro-content">
               宝宝名：小七
             </div> -->
+         
+              <span  class="order-status order-tag-new" v-if="info.status==1">进行中</span>
+              <span  class="order-status order-tag-new" v-else-if="info.status==2">即将过期</span>
+              <span  class="order-status order-tag-new" v-else-if="info.status==3">即将失效</span>
+              <span  class="order-status order-tag-new" v-else-if="info.status==4">未付款</span>
+           
           </div>
-          <div class="order-status order-tag-new">
-            <span v-if="info.status==1">进行中</span>
-            <span v-else-if="info.status==2">即将过期</span>
-            <span v-else-if="info.status==3">即将失效</span>
-            <span v-else-if="info.status==4">未付款</span>
-          </div>
+          
         </div>
         <div class="item-card">
           <div class="item-card-img">
@@ -81,10 +82,10 @@
           <div class="order-info-item-title">生成时间</div>
           <div>{{info.orderTime}}</div>
         </div>
-        <div class="order-info-item" v-if="info.status!=4">
+        <!-- <div class="order-info-item" v-if="info.status!=4">
           <div class="order-info-item-title">到期时间</div>
           <div>{{info.endTime}}</div>
-        </div>
+        </div> -->
       </div>
       <div class="btns">
         <!-- <div @click="show=true">邀请打卡</div> -->
@@ -116,15 +117,15 @@
     data() {
       return {
         show: false,
-     
+
         info: {
-          dtnPrice:'',
-          orderPrice:'',
-          finalPrice:''
+          dtnPrice: '',
+          orderPrice: '',
+          finalPrice: ''
         },
-        commodity:{
-   
-          
+        commodity: {
+
+
         },
       }
     },
@@ -151,11 +152,11 @@
         }).then(res => {
           if (res.code == 200) {
             this.info = res.data;
-            this.commodity=res.data.commodity;
+            this.commodity = res.data.commodity;
 
           }
         })
-       
+
       },
 
     },
@@ -358,20 +359,25 @@
       height: 60px;
       margin-left: 10px;
       margin-right: 10px;
+      display: flex;
     }
 
     .top-info-intro-content {
       width: 100%;
-      height: 22px;
+      max-height: 44px;
       font-size: 14px;
       font-family: PingFangSC-Medium, PingFang SC;
       font-weight: 500;
       line-height: 22px;
+      overflow: hidden;
+		display: -webkit-box;
+		-webkit-line-clamp: 2;
+		-webkit-box-orient: vertical;
     }
 
     .order-status {
       width: 60px;
-      height: 100%;
+      line-height: 22px;
       font-size: 12px;
     }
 
@@ -406,6 +412,10 @@
 
     .item-card-content>div {
       font-weight: bold;
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
     }
 
     .order-info-title {
@@ -419,10 +429,11 @@
       margin-bottom: 15px;
     }
 
-    .order-info{
+    .order-info {
       background-color: #fff;
       padding: 20px;
     }
+
     .order-info-item {
       width: 100%;
       height: 28px;

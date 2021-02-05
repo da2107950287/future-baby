@@ -90,7 +90,7 @@
         this.loading = true;
         this.$http('/orderlist/getOrderlist', {
           status: this.activeName,
-          uid: getStore("uid"),
+          olsId:this.$route.query.olsId,
           datatime: this.datatime,
           PageNumber: this.PageNumber,
           PageSize: this.PageSize
@@ -128,7 +128,7 @@
             this.loading = true
             this.$http('/orderlist/getOrderlist', {
               status: this.activeName,
-              uid: getStore("uid"),
+              olsId:this.$route.query.olsId,
               datatime: this.datatime,
               PageNumber: this.PageNumber,
               PageSize: this.PageSize

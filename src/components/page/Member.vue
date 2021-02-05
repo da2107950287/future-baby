@@ -137,7 +137,9 @@
 		line-height: 17px;
 	}
 
-	.order-num {}
+	.order-num {
+		color: #aaa;
+	}
 
 	.order-tag-new {
 		color: #DAB471;

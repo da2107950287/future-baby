@@ -2,7 +2,7 @@
   <div class="outlets">
     <header>
       <img :src="logo" alt="">
-      <div @click="call">{{mobile}}</div>
+      <div @click="call(mobile)">{{mobile}}</div>
     </header>
     <div class="content">
       <van-swipe class="my-swipe cover" :autoplay="3000" indicator-color="white">
@@ -80,7 +80,7 @@
               <div class="icon-box1">
                 <div class="icon-box">
                   <span class="iconfont icon-dianhua icon"></span>
-                  <div v-if="item.mobile" class="tel">{{item.mobile}}</div>
+                  <div v-if="item.mobile" class="tel" @click="call(item.mobile)">{{item.mobile}}</div>
                   <div v-else>暂无</div>
 
                 </div>
@@ -90,10 +90,13 @@
             </div>
             <slot name="finished">
 
-              <div v-if="isEmpty==1" class="empty" style="position: fixed;top: 70%;left: 50%;transform: translate(-50%,-50%);">
+              <div v-if="isEmpty==1" class="empty"
+                style="position: fixed;top: 70%;left: 50%;transform: translate(-50%,-50%);">
                 <img class="img1" src="~assets/img/empty-logo.png" alt="">
                 <img class="img2" src="~assets/img/outlet.png" alt="">
-
+                <div class="more">
+                  <span @click="$router.push('/community')">诚邀您加盟创业</span>
+                </div>
               </div>
               <div v-if="isEmpty==2" class="more">
                 <span @click="$router.push('/community')">诚邀您加盟创业</span>
@@ -145,7 +148,7 @@
         banners: [],//banner列表
         list: [],//网点列表
         config: {},
-        cities: ["北京", "上海", "杭州", "广州", "深圳", "南京", "成都", "天津", "武汉"],//热门城市
+        cities: ["全部", "北京", "上海", "杭州", "广州", "深圳", "南京", "成都", "天津", "武汉"],//热门城市
         mobile: "",//平台电话
         logo: "",//平台logo
 
@@ -174,9 +177,9 @@
 
     },
     methods: {
-        //电话咨询
-        call(){
-        window.location.href=`tel://${this.mobile}`;
+      //电话咨询
+      call(mobile) {
+        window.location.href = `tel://${mobile}`;
       },
       getAppConfig() {
         this.$http('/userinfo/getConfig', {
@@ -192,6 +195,8 @@
               this.getLocationCity(this.longitude, this.latitude);
             }).catch(err => {
               // this.$toast.fail('获取地理位置失败')
+
+              setStore('city', '全部')
 
             })
           }
@@ -242,7 +247,7 @@
       //   }, this.city)
       // },
       selectCity1(city) {
-        this.isEmpty=0;
+        this.isEmpty = 0;
         this.city = city;
         this.provinceId = ''
         this.province = '';
@@ -300,11 +305,12 @@
       },
       //获取网点列表
       getOutlets() {
+
         this.loading = true;
         this.$http('/outlets/getOutlets', {
           latitude: this.latitude || '',
           longitude: this.longitude || '',
-          city: this.city || '',
+          city: this.city == '全部' ? "" : this.city,
           PageNumber: this.PageNumber,
           PageSize: this.PageSize,
         }).then(res => {
@@ -333,7 +339,7 @@
           this.$http('/outlets/getOutlets', {
             latitude: this.latitude,
             longitude: this.longitude,
-            city: this.city,
+            city: this.city == '全部' ? "" : this.city,
             PageNumber: this.PageNumber,
             PageSize: this.PageSize,
           }).then(res => {
@@ -377,10 +383,10 @@
 <style lang="scss" scoped>
   @import '~assets/css/mixin.scss';
 
- 
+
 
   .empty {
-  
+
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -395,8 +401,8 @@
     .img2 {
 
       margin-top: .75rem;
-      height: 3.3rem;
-   
+      width: 7.2rem;
+
     }
   }
 
@@ -407,10 +413,10 @@
   }
 
   .audition {
-    @include wh(3rem, 1rem);
+    @include wh(3.6rem, 1.2rem);
     text-align: center;
-    line-height: 1rem;
-    font-size: .4rem;
+    line-height: 1.2rem;
+    font-size: .6rem;
     color: #fff;
     background: linear-gradient(to bottom right, #FA7677, #F24142);
     border-radius: 2rem

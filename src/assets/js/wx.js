@@ -1,4 +1,4 @@
-
+import { setStore } from '../js/http'
 //注入权限验证配置
 export function initConfig(config) {
   wx.config({
@@ -44,7 +44,8 @@ export function getLocation(config) {
                 reslove(data);
               },
               cancel: function (res) {
-                alert('用户拒绝授权获取地理位置');
+                setStore('city', '全部')
+                console.log('用户拒绝授权获取地理位置');
               },
               fail(err) {
                 console.log(err)
@@ -134,7 +135,7 @@ export function wxShare(config, data, callback) {
   });
 }
 export function wxUpload(config) {//微信单图片上传
-console.log(config)
+  console.log(config)
   return new Promise((reslove, reject) => {
     initConfig(config)
     var sourceType = ['album', 'camera']

@@ -32,11 +32,11 @@
 					<div class="pointer"><i class="right"></i></div>
 				</div> -->
 				<!-- <div @click="$router.push({path:'voucher',query:{olsId:info.olsId}})"> -->
-				<div @click="$router.push({path:'/voucher_list',query:{olsId:info.olsId}})">
+				<!-- <div @click="$router.push({path:'/voucher_list',query:{olsId:info.olsId}})">
 					<div><img src="~assets/img/bprofile/icon_quan_b.png" alt=""></div>
 					<div class="account-title">抵扣券</div>
 					<div class="pointer"><i class="right"></i></div>
-				</div>
+				</div> -->
 			</div>
 			<div v-if="role==2 || role==3" class="list">
 				<div class="list-title">
@@ -69,24 +69,24 @@
 			<div v-if="role==2 || role==4"  class="list">
 				<div class="list-title">
 					<div class="list-title-name">会员管理</div>
-					<div class="all" @click="$router.push({path:'/member',query:{olsId:info.olsId,activeName:'0'}})">
+					<!-- <div class="all" @click="$router.push({path:'/member',query:{olsId:info.olsId,activeName:'0'}})">
 						<div class="icon-all">全部</div>
 						<div class="pointer"><i class="right"></i></div>
-					</div>
+					</div> -->
 				</div>
 				<div class="list-content">
 					<div @click="$router.push({path:'/member',query:{olsId:info.olsId,activeName:'2'}})">
 						<div class="icon"><img src="~assets/img/bprofile/icon_youx_vip.png" alt=""></div>
 						<div>有效会员</div>
 					</div>
-					<div @click="$router.push({path:'/member',query:{olsId:info.olsId,activeName:'1'}})">
+					<div @click="$router.push({path:'/audition_list',query:{olsId:info.olsId,activeName:'1'}})">
 						<div class="icon"><img src="~assets/img/bprofile/icon_yx.png" alt=""></div>
-						<div>意向会员</div>
+						<div>预约试学</div>
 					</div>
-					<div @click="$router.push({path:'/member',query:{olsId:info.olsId,activeName:'3'}})">
+					<!-- <div @click="$router.push({path:'/member',query:{olsId:info.olsId,activeName:'3'}})">
 						<div class="icon"><img src="~assets/img/bprofile/icon_gq_vip.png" alt=""></div>
 						<div>过期会员</div>
-					</div>
+					</div> -->
 				</div>
 			</div>
 			<div class="list" >

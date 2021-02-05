@@ -1,6 +1,6 @@
 <template>
 	<div class="order">
-		<div  class="order-item">
+		<div class="order-item">
 			<div class="order-item-title">
 				<div class="order-num">订单编号：{{item.olId}}</div>
 				<div class="order-tag-new">
@@ -23,7 +23,7 @@
 					</div> -->
 				</div>
 			</div>
-			<div class="item-card"  @click="$router.push({path:'/borderDetail',query:{olId:item.olId}})">
+			<div class="item-card" @click="$router.push({path:'/borderDetail',query:{olId:item.olId}})">
 				<div class="item-card-img">
 					<!-- <img src="../../assets/img/icon_ka.png" alt=""> -->
 					<div class="img">
@@ -38,8 +38,8 @@
 				</div>
 			</div>
 			<div class="price">
-				<span>总价 <i>¥</i>{{item.orderPrice | formatPrice}}</span><span>抵扣<i>¥</i>{{item.dtnPrice | formatPrice}}</span><span
-					class="fact">实付额<i>¥</i>{{item.orderPrice | formatPrice}}</span>
+				<span>总价 <i>¥</i>{{item.orderPrice | formatPrice}}</span><span>抵扣 <i>¥</i>{{item.dtnPrice |
+					formatPrice}}</span><span class="fact">实付额 <i>¥</i>{{item.orderPrice | formatPrice}}</span>
 			</div>
 		</div>
 	</div>
@@ -60,7 +60,7 @@
 			}
 		},
 		methods: {
-		
+
 		}
 	}
 </script>
@@ -189,6 +189,7 @@
 		font-family: PingFangSC-Medium, PingFang SC;
 		font-weight: 500;
 		line-height: 22px;
+
 	}
 
 	.item-card {

@@ -39,8 +39,8 @@ export function http(url, data = {}, method = 'post') {
 
       if (response.data.code == 501) {
         // let url = encodeURIComponent('http://dragonworld.top/futureBaby/index.html#/auth');
-        // let url = encodeURIComponent(`${window.location.href.split('#')[0]}#/auth`);
-        // window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxd77b65042c011f00&redirect_uri=${url}&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect`;
+        let url = encodeURIComponent(`${window.location.href.split('#')[0]}#/auth`);
+        window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxd77b65042c011f00&redirect_uri=${url}&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect`;
 
       }
       return response.data;

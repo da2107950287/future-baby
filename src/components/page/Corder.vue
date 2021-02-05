@@ -24,7 +24,7 @@
           <div class="course-english-name">{{item.commodity.courseEnglishName}}</div>
         </div>
         <div class="div">
-          <div>{{item.commodity.courseName}}</div>
+          <div class="courseName">{{item.commodity.courseName}}</div>
           <div>{{item.commodity.comName}}</div>
         </div>
       </div>
@@ -70,6 +70,13 @@
 <style lang="scss" scoped>
   @import '~assets/css/mixin.scss';
 
+  .courseName {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+
   .order {
     padding: 0 1rem;
     background: #F7F7F7;
@@ -104,11 +111,16 @@
 
           .name {
             color: #333;
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
           }
         }
 
         .top-right {
           color: #FC4B4C;
+          flex-shrink: 0;
         }
 
         .expire {

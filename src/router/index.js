@@ -63,6 +63,8 @@ const staff = () => import(/* webpackChunkName: "bprofile" */ '../views/bprofile
 const teach_plan = () => import(/* webpackChunkName: "bprofile" */ '../views/bprofile/TeachPlan.vue');
 const teach_plan_detail = () => import(/* webpackChunkName: "bprofile" */ '../views/bprofile/TeachPlanDetail.vue');
 const member = () => import(/* webpackChunkName: "bprofile" */ '../views/bprofile/Member.vue');
+const audition_list = () => import(/* webpackChunkName: "bprofile" */ '../views/bprofile/AuditionList.vue');
+
 const member_detail = () => import(/* webpackChunkName: "bprofile" */ '../views/bprofile/MemberDetail.vue');
 const network = () => import(/* webpackChunkName: "bprofile" */ '../views/bprofile/Network.vue');
 const bussiness = () => import(/* webpackChunkName: "bprofile" */ '../views/bprofile/Bussiness.vue');
@@ -131,6 +133,9 @@ const routes = [
   { path: '/teach_plan', name: '教案中心', component: teach_plan },
   { path: '/teach_plan_detail', name: '教案中心详情', component: teach_plan_detail },
   { path: '/member', name: '会员管理', component: member },
+  { path: '/audition_list', name: '预约试学', component: audition_list },
+
+  
   { path: '/member_detail', name: '会员管理', component: member_detail },
   { path: '/bussiness', name: '商户信息', component: bussiness },
   { path: '/network', name: '网点资料', component: network },
@@ -157,8 +162,8 @@ router.beforeEach((to, from, next) => {
     let _token = getStore('token');
     if (!_token) {
       // let url = encodeURIComponent('http://dragonworld.top/futureBaby/index.html#/auth');
-      // let url = encodeURIComponent(`${window.location.href.split('#')[0]}#/auth`);
-      // window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxd77b65042c011f00&redirect_uri=${url}&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect`;
+      let url = encodeURIComponent(`${window.location.href.split('#')[0]}#/auth`);
+      window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxd77b65042c011f00&redirect_uri=${url}&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect`;
 
     } else {
       next();

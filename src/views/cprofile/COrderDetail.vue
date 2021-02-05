@@ -24,7 +24,7 @@
             <div class="course-name">{{info.commodity.courseName}}</div>
             <div class="course-english-name">{{info.commodity.courseEnglishName}}</div>
           </div>
-          <div>
+          <div class="courseName">
             <div>{{info.commodity.courseName}}</div>
             <div>{{info.commodity.comName}}</div>
           </div>
@@ -141,6 +141,9 @@
 </script>
 <style lang="scss" scoped>
   @import '~assets/css/mixin.scss';
+  .courseName{
+
+  }
 
   .c-order {
     @include wh(100%, 100%);

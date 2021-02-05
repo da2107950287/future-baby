@@ -7,13 +7,13 @@
       <div>
         <NetworkIntro :olsName="info.olsName" :address="address" :mobile="info.mobile" :olsId="olsId"></NetworkIntro>
         <Card :card="info.commodityEntity" style="margin-top: .25rem;"></Card>
-        <div class="voucher">
+        <!-- <div class="voucher">
           <span>抵扣券</span>
           <span @click="$router.push({path:'/networkVouchers',query:{olsId:info.olsId}})">
             <span v-if="!price">选择抵扣券</span>
             <span v-else>￥{{price}}</span>
             <span class="iconfont icon-fanhui2 icon"></span></span>
-        </div>
+        </div> -->
       </div>
       <div class="btn">
         <van-button color="#FC4B4C" round block @click="pay">微信支付</van-button>

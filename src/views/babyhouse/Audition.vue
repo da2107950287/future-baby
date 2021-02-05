@@ -23,8 +23,12 @@
             <van-datetime-picker v-model="currentDate" type="date" :minDate="minDate" :maxDate="maxDate"
               @confirm="onConfirm" @cancel="showCalendar = false" />
           </van-popup>
-          <van-field is-link @click="showIndentity = true" v-model="query.parentIdentity" name="家长身份" label="家长身份"
-            placeholder="请填写" :error-message="verification.parentIdentity" required @input="VerifyCellParentIdentity" />
+          <van-field v-model="query.parentIdentity" name="家长身份" label="家长身份" placeholder="请填写"
+            :error-message="verification.parentIdentity" required @input="VerifyCellParentIdentity">
+            <template #right-icon>
+              <van-icon name="arrow" @click="showIndentity = true" />
+            </template>
+          </van-field>
           <van-action-sheet v-model="showIndentity" :actions="actions" @select="onSelect" />
           <van-field v-model="query.parentFullname" name="家长姓名" label="家长姓名" placeholder="请填写"
             :error-message="verification.parentFullname" />
@@ -62,11 +66,11 @@
         },//错误提示
         showCalendar: false,//是否显示日历
         showIndentity: false,
-        actions: [{ name: '父亲' }, { name: '母亲' }],
+        actions: [{ name: '爸爸' }, { name: '妈妈' }],
 
       };
     },
-   
+
 
     created() {
       this.query.olsId = this.$route.query.olsId;
@@ -85,7 +89,7 @@
         this.$http('/outlets/insertSubscribe', this.query).then(res => {
           if (res.code == 200) {
             this.$toast.success(res.msg);
-            this.$router.push({path:'/networkDetail',query:{olsId:this.query.olsId }})
+            this.$router.push({ path: '/networkDetail', query: { olsId: this.query.olsId } })
           } else if (code == 500) {
             this.$toast.fail(res.msg);
           }

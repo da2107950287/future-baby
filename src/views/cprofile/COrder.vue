@@ -180,17 +180,17 @@
     overflow-y: scroll
   }
 
-  /deep/.van-tabs {
+  /* /deep/.van-tabs {
     position: fixed;
     top: 44px;
     width: 100%;
 
-  }
+  } */
 
-  .list {
+  /* .list {
     height: 100% !important;
 
-  }
+  } */
 
   .c-order {
     @include wh(100%, 100%);
@@ -244,7 +244,7 @@
 
   .order-list {
 
-    height: 100%;
+
     overflow-y: scroll;
     background: #F7F7F7;
   }

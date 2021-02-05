@@ -12,6 +12,8 @@
           <span class="tag" v-if="orderInfo.status==1">进行中</span>
           <span class="tag" v-else-if="orderInfo.status==2">即将过期</span>
           <span class="tag" v-else-if="orderInfo.status==3">已失效</span>
+          <span class="tag" v-else-if="orderInfo.status==4">未付款</span>
+        
         </span>
         <!-- <span>{{orderInfo.orderTime | formatTime}}</span> -->
       </span>
@@ -20,10 +22,10 @@
       <span class="label">生成时间</span>
       <span>{{orderInfo.orderTime | formatTime}}</span>
     </div>
-    <div  v-if="orderInfo.status!=4">
+    <!-- <div  v-if="orderInfo.status!=4">
       <span class="label">到期时间</span>
       <span>{{orderInfo.endTime | formatTime}}</span>
-    </div>
+    </div> -->
   </div>
 </template>
 <script>

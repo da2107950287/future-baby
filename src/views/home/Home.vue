@@ -121,6 +121,7 @@
               }
             }).catch(err => {
               // this.$toast.fail('获取地理位置失败')
+              setStore('city', '全部')
             })
           }
         })
